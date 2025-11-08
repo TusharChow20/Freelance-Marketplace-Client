@@ -4,6 +4,7 @@ body {
 }
 
 @import "tailwindcss";
+
 @plugin "daisyui" {
   themes: light --prefersdark, dark;
 }
