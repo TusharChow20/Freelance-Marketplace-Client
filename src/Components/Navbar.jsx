@@ -3,8 +3,8 @@ import { NavLink } from "react-router";
 
 const Navbar = () => {
   return (
-    <div>
-      <div className="navbar bg-base-100 shadow-sm">
+    <div className=" top-0 left-0 right-0 z-50">
+      <div className="navbar bg-white/80 backdrop-blur-md shadow-sm">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -15,65 +15,60 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                {" "}
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M4 6h16M4 12h8m-8 6h16"
-                />{" "}
+                />
               </svg>
             </div>
             <ul
-              tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              tabIndex={-1}
+              className="menu menu-sm dropdown-content bg-white/95 backdrop-blur-md rounded-box z-1 mt-3 w-52 p-2 shadow-lg"
             >
               <li>
-                <a>Item 1</a>
+                <NavLink to="/">Home</NavLink>
               </li>
               <li>
-                <a>Parent</a>
-                <ul className="p-2">
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
+                <NavLink to="/all-jobs">All Jobs</NavLink>
               </li>
               <li>
-                <a>Item 3</a>
+                <NavLink to="/add-job">Add a Job</NavLink>
+              </li>
+              <li>
+                <NavLink to="/my-accepted-tasks">My Accepted Tasks</NavLink>
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <NavLink
+            to="/"
+            className="btn btn-ghost text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+          >
+            JobPortal
+          </NavLink>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
+          <ul className="menu menu-horizontal px-1 gap-2">
             <li>
-              <a>Item 1</a>
+              <NavLink to="/">Home</NavLink>
             </li>
             <li>
-              <details>
-                <summary>Parent</summary>
-                <ul className="p-2">
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
-              </details>
+              <NavLink to="/all-jobs">All Jobs</NavLink>
             </li>
             <li>
-              <a>Item 3</a>
+              <NavLink to="/add-job">Add a Job</NavLink>
+            </li>
+            <li>
+              <NavLink to="/my-accepted-tasks">My Accepted Tasks</NavLink>
             </li>
           </ul>
         </div>
         <div className="navbar-end">
-          <NavLink to={"/login"} className="btn">
+          <NavLink
+            to="/login"
+            className="btn bg-gradient-to-r from-blue-600 to-purple-600 text-white border-none hover:from-blue-700 hover:to-purple-700"
+          >
             Login
           </NavLink>
         </div>

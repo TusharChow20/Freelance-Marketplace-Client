@@ -2,3 +2,8 @@
 @plugin "daisyui" {
   themes: light --prefersdark, dark;
 }
+.active {
+  background-color: #dbeafe;
+  color: #2563eb;
+  font-weight: 600;
+}
