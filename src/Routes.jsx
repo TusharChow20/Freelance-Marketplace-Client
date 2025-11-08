@@ -22,8 +22,8 @@ const router = createBrowserRouter([
         Component: Register,
       },
       {
-        path: '/d'
-      }
+        path: "/all-jobs",
+      },
     ],
   },
 ]);
