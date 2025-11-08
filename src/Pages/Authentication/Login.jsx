@@ -1,18 +1,33 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { AuthContext } from "../../Provider/AuthContext";
 const Login = () => {
   const [error, setError] = useState("");
-
+  const { googleLogin } = use(AuthContext);
   const handleGoogleLogin = () => {
-    toast.success("Google login successful! Redirecting to home...", {
-      duration: 3000,
-      position: "top-right",
-      style: {
-        background: "#10b981",
-        color: "#fff",
-      },
-      icon: "🎉",
-    });
+    googleLogin()
+      .then((res) => {
+        toast.success(`Google login successful! Redirecting to home ${res}`, {
+          duration: 3000,
+          position: "top-right",
+          style: {
+            background: "#10b981",
+            color: "#fff",
+          },
+          icon: "🎉",
+        });
+      })
+      .catch((error) => {
+        toast.error(error.message, {
+          duration: 3000,
+          position: "top-right",
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+          },
+          icon: "❌",
+        });
+      });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
