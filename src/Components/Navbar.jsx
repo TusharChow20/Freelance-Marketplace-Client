@@ -3,10 +3,12 @@ import { NavLink } from "react-router";
 import { AuthContext } from "../Provider/AuthContext";
 
 const Navbar = () => {
-  const { user } = use(AuthContext);
-  const handleSignOut =()=>{
-    
-  }
+  const { user, logOut } = use(AuthContext);
+  const handleSignOut = () => {
+    logOut()
+      .then((res) => console.log("googd"))
+      .catch((error) => console.log(error));
+  };
   return (
     <div className="top-0 left-0 right-0 z-50">
       <div className="navbar bg-base-100/80 backdrop-blur-md shadow-sm px-1 md:px-10">
