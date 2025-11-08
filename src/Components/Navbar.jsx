@@ -84,7 +84,7 @@ const Navbar = () => {
           </label>
           <NavLink
             to="/login"
-            className="px-3 py-2  font-medium transition-colors btn bg-transparent text-xl"
+            className="px-3 py-2  font-medium transition-colors btn border-0 bg-transparent text-xl"
           >
             Login
           </NavLink>

@@ -47,7 +47,7 @@ const Login = () => {
   };
 
   return (
-    <div className=" py-10 flex items-center justify-center ">
+    <div className=" min-h-screen py-10 flex items-center justify-center ">
       <Toaster
         position="top-right"
         reverseOrder={false}

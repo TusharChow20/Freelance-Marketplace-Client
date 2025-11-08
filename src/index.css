@@ -6,7 +6,8 @@ body {
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes: light --prefersdark, dark;
+  themes: light, dark;
+  /* darktheme: "dark"; */
 }
 .active {
   background-color: #dbeafe;
