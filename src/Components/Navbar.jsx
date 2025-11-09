@@ -35,7 +35,7 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={-1}
-              className="menu menu-sm dropdown-content bg-base-100/95 backdrop-blur-md rounded-box z-1 mt-3 w-52 p-2 shadow-lg"
+              className="menu menu-sm dropdown-content bg-white text-black rounded-box z-20 mt-3 w-52 p-2 shadow-lg border border-base-300"
             >
               <li>
                 <NavLink to="/">Home</NavLink>
@@ -48,6 +48,15 @@ const Navbar = () => {
               </li>
               <li>
                 <NavLink to="/my-accepted-tasks">My Accepted Tasks</NavLink>
+              </li>
+              <li>
+                {user ? (
+                  <NavLink to="/login" onClick={handleSignOut}>
+                    Sign Out
+                  </NavLink>
+                ) : (
+                  <NavLink to="/login">Login</NavLink>
+                )}
               </li>
             </ul>
           </div>
@@ -115,7 +124,7 @@ const Navbar = () => {
                 </div>
                 <ul
                   tabIndex={0}
-                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow-lg border border-base-300"
                 >
                   <li className="menu-title">
                     <span>{user.email || "User"}</span>
@@ -125,7 +134,7 @@ const Navbar = () => {
               <NavLink
                 to="/login"
                 onClick={handleSignOut}
-                className="px-3 py-2  font-medium transition-colors btn border-0 bg-transparent text-xl"
+                className="px-3 py-2  font-medium transition-colors btn border-0 bg-transparent text-xl hidden lg:flex"
               >
                 Sign Out
               </NavLink>
@@ -133,7 +142,7 @@ const Navbar = () => {
           ) : (
             <NavLink
               to="/login"
-              className="px-3 py-2  font-medium transition-colors btn border-0 bg-transparent text-xl"
+              className="px-3 py-2  font-medium transition-colors btn border-0 bg-transparent text-xl hidden lg:flex"
             >
               Login
             </NavLink>
