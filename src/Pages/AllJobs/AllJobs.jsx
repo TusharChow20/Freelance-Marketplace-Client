@@ -5,7 +5,7 @@ import Jobs from "./Jobs";
 const AllJobs = () => {
   const axiosSecure = useAxiosSecure();
   const [allJob, setAllJob] = useState([]);
-  console.log(allJob);
+  // console.log(allJob);
 
   useEffect(() => {
     axiosSecure.get("/jobs").then((data) => setAllJob(data.data));

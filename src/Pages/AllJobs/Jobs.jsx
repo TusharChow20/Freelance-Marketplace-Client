@@ -1,11 +1,8 @@
 import React from "react";
+import { Link } from "react-router";
 
 const Jobs = ({ job }) => {
-  const handleViewDetails = () => {
-    // Navigate to job detail page
-    // In your actual app, use: navigate(`/job/${job._id}`)
-    window.location.href = `/job/${job._id}`;
-  };
+  //   console.log(job._id);
 
   return (
     <div className="card bg-base-100 w-full h-[450px] shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-300 overflow-hidden group">
@@ -61,8 +58,8 @@ const Jobs = ({ job }) => {
           </p>
         </div>
         <div className="card-actions justify-end">
-          <button
-            onClick={handleViewDetails}
+          <Link
+            to={`/allJobs/${job._id}`}
             className="btn btn-primary btn-wide hover:scale-105 transition-transform shadow-lg"
           >
             <span>View Details</span>
@@ -79,7 +76,7 @@ const Jobs = ({ job }) => {
                 d="M9 5l7 7-7 7"
               />
             </svg>
-          </button>
+          </Link>
         </div>
       </div>
     </div>
