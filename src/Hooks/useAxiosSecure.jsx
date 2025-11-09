@@ -40,6 +40,7 @@ const useAxiosSecure = () => {
       instance.interceptors.response.eject(reqInceptors);
     };
   }, [logOut, navigate, user]);
+  return instance;
 };
 
 export default useAxiosSecure;
