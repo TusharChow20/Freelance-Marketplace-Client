@@ -1,12 +1,22 @@
+import { use, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { NavLink } from "react-router";
+import { AuthContext } from "../../Provider/AuthContext";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
 
 const Register = () => {
+  const { createUser } = use(AuthContext);
+  const [eyeClosed, setEyeClosed] = useState(true);
   const validatePassword = (pass) => {
     const hasUpperCase = /[A-Z]/.test(pass);
     const hasLowerCase = /[a-z]/.test(pass);
+    const hasNumber = /[0-9]/.test(pass);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pass);
     const isLongEnough = pass.length >= 6;
 
+    if (!isLongEnough) {
+      return "Password must be at least 6 characters long";
+    }
     if (!hasUpperCase) {
       return "Password must include at least one uppercase letter";
     }
@@ -16,9 +26,10 @@ const Register = () => {
     if (!hasSpecialChar) {
       return "Password must include at least one special character";
     }
-    if (!isLongEnough) {
-      return "Password must be at least 6 characters long";
+    if (!hasNumber) {
+      return "Password must include at least one number";
     }
+
     return null;
   };
 
@@ -57,16 +68,41 @@ const Register = () => {
       return;
     }
 
-    // Simulate registration success
-    toast.success("Registration successful! Redirecting to home...", {
-      duration: 3000,
-      position: "top-right",
-      style: {
-        background: "#10b981",
-        color: "#fff",
-      },
-      icon: "✅",
-    });
+    /////-----------create user---------------
+    createUser(email, password)
+      .then(() => {
+        toast.success("Registration successful! Redirecting to home...", {
+          duration: 3000,
+          position: "top-right",
+          style: {
+            background: "#10b981",
+            color: "#fff",
+          },
+          icon: "✅",
+        });
+      })
+      .catch((error) => {
+        // Handle Firebase errors
+        let errorMessage = "Registration failed. Please try again.";
+
+        if (error.code === "auth/email-already-in-use") {
+          errorMessage = "This email is already registered";
+        } else if (error.code === "auth/invalid-email") {
+          errorMessage = "Invalid email address";
+        } else if (error.code === "auth/weak-password") {
+          errorMessage = "Password is too weak";
+        }
+
+        toast.error(errorMessage, {
+          duration: 4000,
+          position: "top-right",
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+          },
+          icon: "❌",
+        });
+      });
   };
 
   const handleGoogleLogin = () => {
@@ -116,7 +152,6 @@ const Register = () => {
               placeholder="Enter your name"
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
               Email
@@ -128,7 +163,6 @@ const Register = () => {
               placeholder="Enter your email"
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-300 text-sm font-bold mb-2">
               Photo URL
@@ -140,24 +174,35 @@ const Register = () => {
               placeholder="Enter photo URL"
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              className="w-full px-3 py-2 border border-gray-300 "
-              placeholder="Enter your password"
-            />
+            <div className="relative">
+              <input
+                type={eyeClosed ? "password" : "text"}
+                name="password"
+                className="w-full px-3 py-2 border border-gray-300 pr-10"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={() => setEyeClosed(!eyeClosed)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {eyeClosed ? (
+                  <EyeClosedIcon size={20} />
+                ) : (
+                  <EyeIcon size={20} />
+                )}
+              </button>
+            </div>
             <p className="text-xs text-gray-400 mt-2">
               Must include uppercase, lowercase, special character, and be at
               least 6 characters
             </p>
           </div>
-
-          <button className="w-full py-2 bg- rounded  transition duration-200 mb-4 bg-gray-100 text-black">
+          <button className="w-full py-2 bg- rounded  transition duration-200 mb-4 bg-gray-100 text-black cursor-pointer shadow-sm">
             Register
           </button>
         </form>
@@ -200,12 +245,12 @@ const Register = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600text-sm">
             Already have an account?{" "}
-            <a
-              href="/login"
+            <NavLink
+              to="/login"
               className="text-blue-500 hover:underline font-semibold"
             >
               Login
-            </a>
+            </NavLink>
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { use, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { AuthContext } from "../../Provider/AuthContext";
+import { NavLink } from "react-router";
 const Login = () => {
   const [error, setError] = useState("");
   const { googleLogin } = use(AuthContext);
@@ -156,12 +157,12 @@ const Login = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
             Don't have an account?{" "}
-            <a
-              href="/register"
+            <NavLink
+              to="/register"
               className="text-blue-500 hover:underline font-semibold"
             >
               Register
-            </a>
+            </NavLink>
           </p>
         </div>
       </div>
