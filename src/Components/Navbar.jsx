@@ -1,9 +1,12 @@
 import React, { use } from "react";
 import { NavLink } from "react-router";
 import { AuthContext } from "../Provider/AuthContext";
+import { User } from "lucide-react";
 
 const Navbar = () => {
   const { user, logOut } = use(AuthContext);
+  console.log(user);
+
   const handleSignOut = () => {
     logOut()
       .then((res) => console.log("googd"))
@@ -38,7 +41,7 @@ const Navbar = () => {
                 <NavLink to="/">Home</NavLink>
               </li>
               <li>
-                <NavLink to="/all-jobs">All Jobs</NavLink>
+                <NavLink to="/allJobs">All Jobs</NavLink>
               </li>
               <li>
                 <NavLink to="/add-job">Add a Job</NavLink>
@@ -61,7 +64,7 @@ const Navbar = () => {
               <NavLink to="/">Home</NavLink>
             </li>
             <li>
-              <NavLink to="/all-jobs">All Jobs</NavLink>
+              <NavLink to="/allJobs">All Jobs</NavLink>
             </li>
             <li>
               <NavLink to="/add-job">Add a Job</NavLink>
@@ -90,13 +93,43 @@ const Navbar = () => {
             </svg>
           </label>
           {user ? (
-            <NavLink
-              to="/login"
-              onClick={handleSignOut}
-              className="px-3 py-2  font-medium transition-colors btn border-0 bg-transparent text-xl"
-            >
-              Sign Out
-            </NavLink>
+            <>
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-ghost btn-circle avatar"
+                >
+                  <div className="w-10 rounded-full">
+                    {user.photoURL ? (
+                      <img
+                        alt={user.displayName || "User"}
+                        src={user.photoURL}
+                      />
+                    ) : (
+                      <div className="bg-neutral text-neutral-content w-full h-full flex items-center justify-center">
+                        <User size={24} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+                >
+                  <li className="menu-title">
+                    <span>{user.email || "User"}</span>
+                  </li>
+                </ul>
+              </div>
+              <NavLink
+                to="/login"
+                onClick={handleSignOut}
+                className="px-3 py-2  font-medium transition-colors btn border-0 bg-transparent text-xl"
+              >
+                Sign Out
+              </NavLink>
+            </>
           ) : (
             <NavLink
               to="/login"

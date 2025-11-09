@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         Component: Register,
       },
       {
-        path: "/all-jobs",
+        path: "/allJobs",
       },
     ],
   },
