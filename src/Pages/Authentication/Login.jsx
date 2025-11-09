@@ -4,7 +4,7 @@ import { AuthContext } from "../../Provider/AuthContext";
 import { NavLink } from "react-router";
 const Login = () => {
   const [error, setError] = useState("");
-  const { googleLogin } = use(AuthContext);
+  const { googleLogin, logIn } = use(AuthContext);
   const handleGoogleLogin = () => {
     googleLogin()
       .then((res) => {
@@ -35,31 +35,43 @@ const Login = () => {
     setError("");
     const email = e.target.email.value;
     const password = e.target.password.value;
+    logIn(email, password)
+      .then(() => {
+        toast.success("Login successful! Redirecting...", {
+          duration: 3000,
+          position: "top-right",
+          style: {
+            background: "#10b981",
+            color: "#fff",
+          },
+          icon: "✅",
+        });
+      })
+      .catch((error) => {
+        let errorMessage = "Login failed. Please try again.";
 
-    // Simulate login logic
-    if (email === "user@example.com" && password === "password123") {
-      // Success - navigate to home
-      toast.success("Login successful! Redirecting to home...", {
-        duration: 3000,
-        position: "top-right",
-        style: {
-          background: "#10b981",
-          color: "#fff",
-        },
-        icon: "✅",
+        if (error.code === "auth/user-not-found") {
+          errorMessage = "No account found with this email";
+        } else if (error.code === "auth/wrong-password") {
+          errorMessage = "Incorrect password";
+        } else if (error.code === "auth/invalid-email") {
+          errorMessage = "Invalid email address";
+        } else if (error.code === "auth/invalid-credential") {
+          errorMessage = "Invalid email or password";
+        } else if (error.code === "auth/too-many-requests") {
+          errorMessage = "Too many failed attempts. Please try again later";
+        }
+
+        toast.error(errorMessage, {
+          duration: 4000,
+          position: "top-right",
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+          },
+          icon: "❌",
+        });
       });
-      // setTimeout(() => window.location.href = "/home", 1500);
-    } else {
-      toast.error("Invalid email or password", {
-        duration: 3000,
-        position: "top-right",
-        style: {
-          background: "#ef4444",
-          color: "#fff",
-        },
-        icon: "❌",
-      });
-    }
   };
 
   return (

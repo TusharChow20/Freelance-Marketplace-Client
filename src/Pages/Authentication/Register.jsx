@@ -7,6 +7,32 @@ import { EyeClosedIcon, EyeIcon } from "lucide-react";
 const Register = () => {
   const { createUser } = use(AuthContext);
   const [eyeClosed, setEyeClosed] = useState(true);
+  const { googleLogin } = use(AuthContext);
+  const handleGoogleLogin = () => {
+    googleLogin()
+      .then(() => {
+        toast.success(`Google registration successful! Redirecting..........`, {
+          duration: 3000,
+          position: "top-right",
+          style: {
+            background: "#10b981",
+            color: "#fff",
+          },
+          icon: "🎉",
+        });
+      })
+      .catch((error) => {
+        toast.error(error.message, {
+          duration: 3000,
+          position: "top-right",
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+          },
+          icon: "❌",
+        });
+      });
+  };
   const validatePassword = (pass) => {
     const hasUpperCase = /[A-Z]/.test(pass);
     const hasLowerCase = /[a-z]/.test(pass);
@@ -103,19 +129,6 @@ const Register = () => {
           icon: "❌",
         });
       });
-  };
-
-  const handleGoogleLogin = () => {
-    toast.success("Google registration successful! Redirecting to home...", {
-      duration: 3000,
-      position: "top-right",
-      style: {
-        background: "#10b981",
-        color: "#fff",
-      },
-      icon: "🎉",
-    });
-    // setTimeout(() => window.location.href = "/home", 1500);
   };
 
   return (
