@@ -8,6 +8,7 @@ import axios from "axios";
 import JobDetails from "./Pages/AllJobs/JobDetails";
 import AddJobs from "./Pages/AllJobs/AddJobs";
 import AcceptedJob from "./Pages/AccpetedJob/AcceptedJob";
+import UpdateJob from "./Pages/AllJobs/UpdateJob";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/my-accepted-tasks",
         Component: AcceptedJob,
+      },
+      {
+        path: "/update-job/:id",
+        Component: UpdateJob,
       },
     ],
   },

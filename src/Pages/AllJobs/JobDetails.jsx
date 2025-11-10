@@ -1,16 +1,19 @@
 import React, { use, useEffect, useState } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { AuthContext } from "../../Provider/AuthContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const JobDetails = () => {
   const axiosInstance = useAxiosSecure();
   const { data } = useLoaderData();
   const { user } = use(AuthContext);
+  const navigate = useNavigate();
   const [acceptEmail, setAcceptEmail] = useState();
-  //   console.log(acceptEmail);
+  const logggedInUserEmail = user?.email;
+  const jobCreatorEmail = data?.userEmail;
+  const isJobCreator = logggedInUserEmail === jobCreatorEmail;
 
-  console.log(data);
   useEffect(() => {
     if (!user?.email) return;
     axiosInstance
@@ -21,7 +24,6 @@ const JobDetails = () => {
   const isAccepted = acceptEmail?.some(
     (item) => item.courseTitle === data?.title
   );
-  //   console.log(isAccepted);
 
   const handleAcceptJob = async () => {
     const acceptedJobsUser = {
@@ -30,18 +32,33 @@ const JobDetails = () => {
       courseTitle: data.title,
       courseImage: data.coverImage,
     };
-    // console.log(acceptedJobsUser);
 
-    // axiosInstance.post("/acceptedJob", acceptedJobsUser);
     try {
       await axiosInstance.post("/acceptedJob", acceptedJobsUser);
       setAcceptEmail((prev) => [...(prev || []), acceptedJobsUser]);
+      toast.success("Job accepted successfully!");
     } catch (error) {
       console.error("Error accepting job:", error);
+      toast.error("Failed to accept job");
     }
   };
 
-  // Loading state
+  const handleUpdateJob = () => {
+    navigate(`/update-job/${data._id}`, { state: { jobData: data } });
+  };
+
+  const handleDeleteJob = async () => {
+    if (window.confirm("Are you sure you want to delete this job?")) {
+      try {
+        await axiosInstance.delete(`/jobs/${data._id}`);
+        toast.success("Job deleted successfully!");
+        navigate(-1); 
+      } catch (error) {
+        console.error("Error deleting job:", error);
+        toast.error("Failed to delete job");
+      }
+    }
+  };
   if (!data || !user) {
     return (
       <div className="min-h-screen bg-base-200 flex items-center justify-center">
@@ -53,9 +70,7 @@ const JobDetails = () => {
   return (
     <div className="min-h-screen bg-base-200 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Main Job Card */}
         <div className="card bg-base-100 shadow-xl">
-          {/* Cover Image */}
           <figure className="h-64 md:h-80 overflow-hidden">
             <img
               src={data.coverImage}
@@ -65,7 +80,6 @@ const JobDetails = () => {
           </figure>
 
           <div className="card-body p-6 md:p-8">
-            {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
               <div className="flex-1">
                 <div className="badge badge-primary badge-lg mb-3">
@@ -76,47 +90,92 @@ const JobDetails = () => {
                 </h1>
                 <p className="text-base-content/70 text-lg">{data.summary}</p>
               </div>
-
-              {/* Action Button */}
               <div className="flex flex-col gap-2">
-                {!isAccepted ? (
-                  <button
-                    onClick={handleAcceptJob}
-                    className="btn btn-primary btn-lg"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                {isJobCreator ? (
+                  <>
+                    <button
+                      onClick={handleUpdateJob}
+                      className="btn btn-primary btn-lg"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    Accept Job
-                  </button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>
+                      Update Details
+                    </button>
+                    <button
+                      onClick={handleDeleteJob}
+                      className="btn btn-error btn-lg"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </>
                 ) : (
-                  <div className="alert alert-success">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="stroke-current shrink-0 h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span>Job Accepted!</span>
-                  </div>
+                  <>
+                    {!isAccepted ? (
+                      <button
+                        onClick={handleAcceptJob}
+                        className="btn btn-primary btn-lg"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 mr-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        Accept Job
+                      </button>
+                    ) : (
+                      <div className="alert alert-success">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="stroke-current shrink-0 h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <span>Job Accepted!</span>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -140,7 +199,7 @@ const JobDetails = () => {
                   </p>
                 </div>
               </div>
-              {/* poseted job--------------------////////// */}
+
               <div className="flex items-center gap-4 p-4 bg-base-200 rounded-lg">
                 <div className="bg-primary/10 p-3 rounded-full">
                   <svg
@@ -170,7 +229,6 @@ const JobDetails = () => {
                 </div>
               </div>
 
-              {/* email ------------------  */}
               <div className="flex items-center gap-4 p-4 bg-base-200 rounded-lg md:col-span-2">
                 <div className="bg-primary/10 p-3 rounded-full">
                   <svg
@@ -196,8 +254,6 @@ const JobDetails = () => {
                 </div>
               </div>
             </div>
-
-            {/* Job Description Section */}
             <div className="bg-base-200/50 p-6 rounded-lg">
               <h3 className="text-2xl font-bold mb-4">About this Job</h3>
               <p className="text-base-content/80 leading-relaxed mb-4">
@@ -213,8 +269,6 @@ const JobDetails = () => {
                 </div>
               </div>
             </div>
-
-            {/* Action Footer */}
             <div className="card-actions justify-between items-center mt-6 pt-6 border-t border-base-300">
               <div className="text-sm text-base-content/60">
                 Job ID: {data._id}
