@@ -25,13 +25,15 @@ const UpdateJob = () => {
   const [loading, setLoading] = useState(false);
 
   const categories = [
-    "Web Development",
-    "Mobile Development",
-    "UI/UX Design",
-    "Data Science",
-    "DevOps",
+    "Technology",
+    "Healthcare",
+    "Finance",
+    "Education",
     "Marketing",
-    "Content Writing",
+    "Sales",
+    "Design",
+    "Customer Service",
+    "Human Resources",
     "Other",
   ];
 
@@ -48,7 +50,7 @@ const UpdateJob = () => {
     setLoading(true);
 
     try {
-      await axiosInstance.put(`/jobs/${id}`, formData);
+      await axiosInstance.patch(`/jobs/${id}`, formData);
       toast.success("Job updated successfully!");
       setTimeout(() => {
         navigate(-1);
@@ -120,7 +122,7 @@ const UpdateJob = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition  text-gray-400"
             >
               <option value="" className="text-gray-900">
-                {jobData.category}
+                Select a Category
               </option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
