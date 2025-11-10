@@ -1,8 +1,10 @@
 import React, { use, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { AuthContext } from "../../Provider/AuthContext";
-import { NavLink } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 const Login = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const { googleLogin, logIn } = use(AuthContext);
   const handleGoogleLogin = () => {
@@ -38,7 +40,7 @@ const Login = () => {
     logIn(email, password)
       .then(() => {
         toast.success("Login successful! Redirecting...", {
-          duration: 3000,
+          duration: 1000,
           position: "top-right",
           style: {
             background: "#10b981",
@@ -46,6 +48,9 @@ const Login = () => {
           },
           icon: "✅",
         });
+        setTimeout(() => {
+          navigate(`${location.state ? location.state : "/"}`);
+        }, 1600);
       })
       .catch((error) => {
         let errorMessage = "Login failed. Please try again.";

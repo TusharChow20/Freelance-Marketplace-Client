@@ -9,6 +9,7 @@ import JobDetails from "./Pages/AllJobs/JobDetails";
 import AddJobs from "./Pages/AllJobs/AddJobs";
 import AcceptedJob from "./Pages/AccpetedJob/AcceptedJob";
 import UpdateJob from "./Pages/AllJobs/UpdateJob";
+import PrivateRoute from "./Provider/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -35,15 +36,27 @@ const router = createBrowserRouter([
         path: "/allJobs/:id",
         loader: ({ params }) =>
           axios(`http://localhost:3000/jobs/${params.id}`),
-        Component: JobDetails,
+        element: (
+          <PrivateRoute>
+            <JobDetails></JobDetails>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/add-job",
-        Component: AddJobs,
+        element: (
+          <PrivateRoute>
+            <AddJobs></AddJobs>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/my-accepted-tasks",
-        Component: AcceptedJob,
+        element: (
+          <PrivateRoute>
+            <AcceptedJob></AcceptedJob>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/update-job/:id",

@@ -1,11 +1,12 @@
 import { use, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../Provider/AuthContext";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { updateProfile } from "firebase/auth";
 
 const Register = () => {
+  const navigate = useNavigate();
   const { createUser } = use(AuthContext);
   const [eyeClosed, setEyeClosed] = useState(true);
   const { googleLogin } = use(AuthContext);
@@ -62,6 +63,7 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const name = e.target.name.value;
     const email = e.target.email.value;
     const photoURL = e.target.photoURL.value;
@@ -113,10 +115,12 @@ const Register = () => {
           displayName: name,
           photoURL: photoURL,
         };
-        updateProfile(res.user,profile);
+
+        updateProfile(res.user, profile);
+        navigate("/");
       })
       .catch((error) => {
-        // Handle Firebase errors
+        //-------- Handle Firebase errors---------------
         let errorMessage = "Registration failed. Please try again.";
 
         if (error.code === "auth/email-already-in-use") {
