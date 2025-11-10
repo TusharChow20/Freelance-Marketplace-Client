@@ -111,7 +111,7 @@ const AddJobs = () => {
               id="category"
               name="category"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition  text-gray-400"
             >
               <option value="">Select a category</option>
               {categories.map((cat) => (

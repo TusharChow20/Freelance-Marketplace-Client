@@ -9,8 +9,8 @@ const Login = () => {
   const { googleLogin, logIn } = use(AuthContext);
   const handleGoogleLogin = () => {
     googleLogin()
-      .then((res) => {
-        toast.success(`Google login successful! Redirecting to home ${res}`, {
+      .then(() => {
+        toast.success("Google login successful! Redirecting to home", {
           duration: 3000,
           position: "top-right",
           style: {
@@ -19,6 +19,9 @@ const Login = () => {
           },
           icon: "🎉",
         });
+        setTimeout(() => {
+          navigate(`${location.state ? location.state : "/"}`);
+        }, 1600);
       })
       .catch((error) => {
         toast.error(error.message, {
