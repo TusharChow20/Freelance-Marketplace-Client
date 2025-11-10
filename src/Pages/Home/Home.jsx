@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import CircularGallery from "./CircularGallery";
+import HeroBanner from "./HeroBanner";
 
 const Home = () => {
   const axiosSecure = useAxiosSecure();
@@ -46,59 +47,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900  to-slate-900">
       {/* ---------------Hero Banner ---------------*/}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-indigo-700/20"></div>
-
-        <div className="max-w-7xl mx-auto px-6 py-20 relative z-10">
-          <div className="text-center space-y-6">
-            <h1 className="text-4xl md:text-7xl font-bold text-white leading-tight">
-              Your Trusted Job
-              <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Marketplace
-              </span>
-            </h1>
-
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
-              Connect with top talent and opportunities. Our reliable platform
-              makes hiring and job searching seamless, secure, and efficient.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-4 pt-6">
-              <Link
-                to="/jobs"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
-              >
-                Browse Jobs
-              </Link>
-              <Link
-                to="/create-job"
-                className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/20 transition-all transform hover:scale-105"
-              >
-                Create a Job
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/*---------- Stats Section */}
-        <div className="max-w-7xl mx-auto px-6 pb-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center border border-white/20">
-              <div className="text-4xl font-bold text-white mb-2">10,000+</div>
-              <div className="text-gray-300">Active Jobs</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center border border-white/20">
-              <div className="text-4xl font-bold text-white mb-2">50,000+</div>
-              <div className="text-gray-300">Job Seekers</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center border border-white/20">
-              <div className="text-4xl font-bold text-white mb-2">5,000+</div>
-              <div className="text-gray-300">Companies</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <HeroBanner></HeroBanner>
       {/* Latest Jobs Circular Gallery */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
