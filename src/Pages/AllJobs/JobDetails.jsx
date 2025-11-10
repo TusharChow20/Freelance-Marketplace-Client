@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { AuthContext } from "../../Provider/AuthContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
@@ -7,10 +7,23 @@ const JobDetails = () => {
   const axiosInstance = useAxiosSecure();
   const { data } = useLoaderData();
   const { user } = use(AuthContext);
-  //   console.log(data);
+  const [acceptEmail, setAcceptEmail] = useState();
+  //   console.log(acceptEmail);
 
-  const isAccepted = false;
-  const handleAcceptJob = () => {
+  //   console.log(data);
+  useEffect(() => {
+    if (!user?.email) return;
+    axiosInstance
+      .get(`/acceptedJob?email=${user.email}`)
+      .then((data) => setAcceptEmail(data.data));
+  }, [axiosInstance, user]);
+
+  const isAccepted = acceptEmail?.some(
+    (item) => item.courseTitle === data?.title
+  );
+  //   console.log(isAccepted);
+
+  const handleAcceptJob = async () => {
     const acceptedJobsUser = {
       name: user.displayName,
       email: user.email,
@@ -19,11 +32,17 @@ const JobDetails = () => {
     };
     // console.log(acceptedJobsUser);
 
-    axiosInstance.post("/acceptedJob", acceptedJobsUser);
+    // axiosInstance.post("/acceptedJob", acceptedJobsUser);
+    try {
+      await axiosInstance.post("/acceptedJob", acceptedJobsUser);
+      setAcceptEmail((prev) => [...(prev || []), acceptedJobsUser]);
+    } catch (error) {
+      console.error("Error accepting job:", error);
+    }
   };
 
   // Loading state
-  if (!data) {
+  if (!data || !user) {
     return (
       <div className="min-h-screen bg-base-200 flex items-center justify-center">
         <span className="loading loading-spinner loading-lg"></span>
