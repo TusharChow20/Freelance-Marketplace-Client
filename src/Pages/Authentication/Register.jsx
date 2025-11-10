@@ -3,6 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { NavLink } from "react-router";
 import { AuthContext } from "../../Provider/AuthContext";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
+import { updateProfile } from "firebase/auth";
 
 const Register = () => {
   const { createUser } = use(AuthContext);
@@ -96,7 +97,9 @@ const Register = () => {
 
     /////-----------create user---------------
     createUser(email, password)
-      .then(() => {
+      .then((res) => {
+        // console.log(res);
+
         toast.success("Registration successful! Redirecting to home...", {
           duration: 3000,
           position: "top-right",
@@ -106,6 +109,11 @@ const Register = () => {
           },
           icon: "✅",
         });
+        const profile = {
+          displayName: name,
+          photoURL: photoURL,
+        };
+        updateProfile(res.user,profile);
       })
       .catch((error) => {
         // Handle Firebase errors
@@ -149,9 +157,7 @@ const Register = () => {
       />
 
       <div className="p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
-          Register
-        </h2>
+        <h2 className="text-2xl font-bold mb-6 text-center ">Register</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
