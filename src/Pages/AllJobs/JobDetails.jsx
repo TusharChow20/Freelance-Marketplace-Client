@@ -10,7 +10,7 @@ const JobDetails = () => {
   const [acceptEmail, setAcceptEmail] = useState();
   //   console.log(acceptEmail);
 
-  //   console.log(data);
+  console.log(data);
   useEffect(() => {
     if (!user?.email) return;
     axiosInstance

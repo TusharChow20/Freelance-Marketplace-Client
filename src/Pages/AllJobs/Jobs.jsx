@@ -52,7 +52,7 @@ const Jobs = ({ job }) => {
             </p>
           </div>
 
-          {/* Summary */}
+          {/* --------------------------Summary ------------------------*/}
           <p className="text-white/95 flex-grow line-clamp-4 leading-relaxed drop-shadow">
             {job.summary}
           </p>
