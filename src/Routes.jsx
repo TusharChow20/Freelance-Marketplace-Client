@@ -6,6 +6,7 @@ import Register from "./Pages/Authentication/Register";
 import AllJobs from "./Pages/AllJobs/AllJobs";
 import axios from "axios";
 import JobDetails from "./Pages/AllJobs/JobDetails";
+import AddJobs from "./Pages/AllJobs/AddJobs";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
         loader: ({ params }) =>
           axios(`http://localhost:3000/jobs/${params.id}`),
         Component: JobDetails,
+      },
+      {
+        path: "/add-job",
+        Component: AddJobs,
       },
     ],
   },
