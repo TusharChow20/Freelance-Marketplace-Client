@@ -1,9 +1,10 @@
 import React, { use } from "react";
 import { AuthContext } from "../../Provider/AuthContext";
 import toast, { Toaster } from "react-hot-toast";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 const AddJobs = () => {
   const { user } = use(AuthContext);
-
+  const axiosInstance = useAxiosSecure();
   const categories = [
     "Technology",
     "Healthcare",
@@ -28,15 +29,15 @@ const AddJobs = () => {
       const coverImage = e.target.coverImage.value;
       const userEmail = e.target.userEmail.value;
       const postedDate = new Date().toISOString().split("T")[0];
-      console.log(
-        title,
-        postedBy,
-        category,
-        summary,
-        coverImage,
-        userEmail,
-        postedDate
-      );
+      //   console.log(
+      //     title,
+      //     postedBy,
+      //     category,
+      //     summary,
+      //     coverImage,
+      //     userEmail,
+      //     postedDate
+      //   );
       const newJob = {
         title: title,
         postedBy: postedBy,
@@ -47,7 +48,11 @@ const AddJobs = () => {
         postedDate: postedDate,
       };
 
+      //   ---------------add to the mongo-------------
+      axiosInstance.post("/jobs", newJob);
+
       toast.success("Job posted successfully!");
+      e.target.reset();
     } catch (error) {
       toast.error("Failed to post job. Please try again.");
       console.error(error);
