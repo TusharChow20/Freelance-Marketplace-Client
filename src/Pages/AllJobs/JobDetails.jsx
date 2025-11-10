@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { useLoaderData } from "react-router";
+import { AuthContext } from "../../Provider/AuthContext";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const JobDetails = () => {
+  const axiosInstance = useAxiosSecure();
   const { data } = useLoaderData();
-  const [isAccepted, setIsAccepted] = useState(false);
+  const { user } = use(AuthContext);
+  //   console.log(data);
 
+  const isAccepted = false;
   const handleAcceptJob = () => {
-    setIsAccepted(true);
-    // Add your job acceptance logic here
-    console.log("Job accepted:", data._id);
+    const acceptedJobsUser = {
+      name: user.displayName,
+      email: user.email,
+      courseTitle: data.title,
+      courseImage: data.coverImage,
+    };
+    // console.log(acceptedJobsUser);
+
+    axiosInstance.post("/acceptedJob", acceptedJobsUser);
   };
 
   // Loading state

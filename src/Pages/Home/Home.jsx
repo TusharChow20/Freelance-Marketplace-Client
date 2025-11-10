@@ -49,7 +49,7 @@ const Home = () => {
       {/* ---------------Hero Banner ---------------*/}
       <HeroBanner></HeroBanner>
       {/* Latest Jobs Circular Gallery */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
             Latest Opportunities
@@ -101,7 +101,7 @@ const Home = () => {
             </p>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* -------------------Featured Categories */}
       <div className="max-w-7xl mx-auto px-6 py-16">

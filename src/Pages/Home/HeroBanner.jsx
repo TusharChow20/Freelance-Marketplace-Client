@@ -58,14 +58,14 @@ const HeroBanner = () => {
 
           <div className="flex flex-wrap justify-center gap-4 pt-8">
             <Link
-              to="/jobs"
+              to="/allJobs"
               className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-2xl hover:shadow-purple-500/50 relative overflow-hidden"
             >
               <span className="relative z-10">Browse Jobs</span>
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
             <Link
-              to="/create-job"
+              to="/add-job"
               className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 hover:border-white/50 transition-all transform hover:scale-105 shadow-xl"
             >
               Create a Job
