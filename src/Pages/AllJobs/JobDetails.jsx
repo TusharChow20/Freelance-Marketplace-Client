@@ -48,15 +48,15 @@ const JobDetails = () => {
   };
 
   const handleDeleteJob = async () => {
-    if (window.confirm("Are you sure you want to delete this job?")) {
-      try {
-        await axiosInstance.delete(`/jobs/${data._id}`);
-        toast.success("Job deleted successfully!");
-        navigate(-1); 
-      } catch (error) {
-        console.error("Error deleting job:", error);
-        toast.error("Failed to delete job");
-      }
+    try {
+      await axiosInstance.delete(`/jobs/${data._id}`);
+      toast.success("Job deleted successfully!");
+      setTimeout(() => {
+        navigate("/allJobs");
+      }, 1000);
+    } catch (err) {
+      console.error("Error deleting job:", err);
+      toast.error("Failed to delete job. Please try again.");
     }
   };
   if (!data || !user) {
