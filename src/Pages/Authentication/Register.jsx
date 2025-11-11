@@ -7,7 +7,7 @@ import { updateProfile } from "firebase/auth";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { createUser } = use(AuthContext);
+  const { createUser, setUser } = use(AuthContext);
   const [eyeClosed, setEyeClosed] = useState(true);
   const { googleLogin } = use(AuthContext);
   const handleGoogleLogin = () => {
@@ -111,13 +111,32 @@ const Register = () => {
           },
           icon: "✅",
         });
-        const profile = {
+
+        updateProfile(res.user, {
           displayName: name,
           photoURL: photoURL,
-        };
-
-        updateProfile(res.user, profile);
-        navigate("/");
+        })
+          .then(() => {
+            setUser({
+              user: res.user,
+              displayName: name,
+              photoURL: photoURL,
+              email: email,
+            });
+            navigate("/");
+          })
+          .catch((error) => {
+            console.error("Profile update failed:", error);
+            toast.error("Profile update failed. Please try again.", {
+              duration: 3000,
+              position: "top-right",
+              style: {
+                background: "#ef4444",
+                color: "#fff",
+              },
+              icon: "❌",
+            });
+          });
       })
       .catch((error) => {
         //-------- Handle Firebase errors---------------

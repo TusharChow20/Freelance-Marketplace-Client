@@ -48,6 +48,9 @@ const Navbar = () => {
                 <NavLink to="/my-accepted-tasks">My Accepted Tasks</NavLink>
               </li>
               <li>
+                <NavLink to="/myAddedJobs">My Added Jobs</NavLink>
+              </li>
+              <li>
                 {user ? (
                   <NavLink to="/login" onClick={handleSignOut}>
                     Sign Out
@@ -78,6 +81,9 @@ const Navbar = () => {
             </li>
             <li>
               <NavLink to="/my-accepted-tasks">My Accepted Tasks</NavLink>
+            </li>
+            <li>
+              <NavLink to="/myAddedJobs">My Added Jobs</NavLink>
             </li>
           </ul>
         </div>

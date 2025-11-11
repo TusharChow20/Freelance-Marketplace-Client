@@ -63,6 +63,7 @@ const AuthProvider = ({ children }) => {
     logIn,
     loading,
     setLoading,
+    setUser,
   };
   if (loading) {
     return <AuthLoading />;
