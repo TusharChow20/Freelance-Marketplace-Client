@@ -14,6 +14,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 // import CircularGallery from "./CircularGallery";
 import HeroBanner from "./HeroBanner";
 import LatestJobs from "./LatestJobs";
+import UserReviews from "./UserReviews ";
 
 const Home = () => {
   const axiosSecure = useAxiosSecure();
@@ -148,6 +149,8 @@ const Home = () => {
         </div>
       </div>
 
+      {/* -----------------------User Reviews Section */}
+      <UserReviews></UserReviews>
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className=" rounded-2xl p-12 text-center">
           <h2 className="text-4xl font-bold text-white mb-4">

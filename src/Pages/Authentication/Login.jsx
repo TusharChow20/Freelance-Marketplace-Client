@@ -9,16 +9,19 @@ const Login = () => {
   const { googleLogin, logIn } = use(AuthContext);
   const handleGoogleLogin = () => {
     googleLogin()
-      .then(() => {
-        toast.success("Google login successful! Redirecting to home", {
-          duration: 3000,
-          position: "top-right",
-          style: {
-            background: "#10b981",
-            color: "#fff",
-          },
-          icon: "🎉",
-        });
+      .then((res) => {
+        toast.success(
+          `Google login successful! Redirecting to ${location.state || "Home"}`,
+          {
+            duration: 3000,
+            position: "top-right",
+            style: {
+              background: "#10b981",
+              color: "#fff",
+            },
+            icon: "🎉",
+          }
+        );
         setTimeout(() => {
           navigate(`${location.state ? location.state : "/"}`);
         }, 1600);
