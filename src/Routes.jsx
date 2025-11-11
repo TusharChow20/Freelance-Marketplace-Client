@@ -10,6 +10,7 @@ import AddJobs from "./Pages/AllJobs/AddJobs";
 import AcceptedJob from "./Pages/AccpetedJob/AcceptedJob";
 import UpdateJob from "./Pages/AllJobs/UpdateJob";
 import PrivateRoute from "./Provider/PrivateRoute";
+import Error404 from "./Pages/Error/Error404";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
         Component: UpdateJob,
       },
     ],
+  },
+  {
+    path: "/*",
+    Component: Error404,
   },
 ]);
 export default router;
