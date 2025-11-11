@@ -44,7 +44,7 @@ const HeroBanner = () => {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div className="text-center space-y-8">
-          <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
+          <h1 className="text-3xl md:text-7xl font-bold text-white leading-tight">
             Your Trusted Job
             <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
               Marketplace

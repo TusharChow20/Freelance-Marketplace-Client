@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
+import {
+  Monitor,
+  Palette,
+  TrendingUp,
+  DollarSign,
+  Heart,
+  BookOpen,
+  Settings,
+  BarChart3,
+} from "lucide-react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import CircularGallery from "./CircularGallery";
 import HeroBanner from "./HeroBanner";
@@ -116,29 +126,37 @@ const Home = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { name: "Technology", icon: "💻", count: "2,340" },
-            { name: "Design", icon: "🎨", count: "1,520" },
-            { name: "Marketing", icon: "📊", count: "1,890" },
-            { name: "Finance", icon: "💰", count: "1,230" },
-            { name: "Healthcare", icon: "🏥", count: "980" },
-            { name: "Education", icon: "📚", count: "750" },
-            { name: "Engineering", icon: "⚙️", count: "1,640" },
-            { name: "Sales", icon: "📈", count: "1,420" },
-          ].map((category) => (
-            <Link
-              key={category.name}
-              to={`/jobs?category=${category.name.toLowerCase()}`}
-              className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center border border-white/20 hover:bg-white/20 transition-all transform hover:scale-105 group"
-            >
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
-                {category.icon}
-              </div>
-              <div className="text-white font-semibold md:text-lg mb-1">
-                {category.name}
-              </div>
-              <div className="text-gray-400 text-sm">{category.count} jobs</div>
-            </Link>
-          ))}
+            { name: "Technology", icon: Monitor, count: "2,340" },
+            { name: "Design", icon: Palette, count: "1,520" },
+            { name: "Marketing", icon: TrendingUp, count: "1,890" },
+            { name: "Finance", icon: DollarSign, count: "1,230" },
+            { name: "Healthcare", icon: Heart, count: "980" },
+            { name: "Education", icon: BookOpen, count: "750" },
+            { name: "Engineering", icon: Settings, count: "1,640" },
+            { name: "Sales", icon: BarChart3, count: "1,420" },
+          ].map((category) => {
+            const IconComponent = category.icon;
+            return (
+              <Link
+                key={category.name}
+                to={`/jobs?category=${category.name.toLowerCase()}`}
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center border border-white/20 hover:bg-white/20 transition-all transform hover:scale-105 group"
+              >
+                <div className="flex justify-center mb-3">
+                  <IconComponent
+                    className="w-10 h-10 text-white group-hover:scale-110 transition-transform"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                <div className="text-white font-semibold md:text-lg mb-1">
+                  {category.name}
+                </div>
+                <div className="text-gray-400 text-sm">
+                  {category.count} jobs
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
 
@@ -190,7 +208,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* CTA Section */}
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className=" rounded-2xl p-12 text-center">
           <h2 className="text-4xl font-bold text-white mb-4">

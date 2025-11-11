@@ -13,7 +13,7 @@ const Navbar = () => {
       .catch((error) => console.log(error));
   };
   return (
-    <div className="top-0 left-0 right-0 z-50">
+    <div className="sticky top-0 left-0 right-0 z-[9999]">
       <div className="navbar bg-base-100/80 backdrop-blur-md shadow-sm px-1 md:px-10">
         <div className="navbar-start">
           <div className="dropdown">
@@ -35,7 +35,7 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={-1}
-              className="menu menu-sm dropdown-content bg-white text-black rounded-box z-20 mt-3 w-52 p-2 shadow-lg border border-base-300"
+              className="menu menu-sm dropdown-content bg-white text-black rounded-box absolute z-[1000] mt-3 w-52 p-2 shadow-lg border border-base-300"
             >
               <li>
                 <NavLink to="/">Home</NavLink>
