@@ -103,7 +103,7 @@ const Navbar = () => {
           </label>
           {user ? (
             <>
-              <div className="dropdown dropdown-end">
+              <div className="dropdown dropdown-end dropdown-hover">
                 <div
                   tabIndex={0}
                   role="button"
@@ -124,10 +124,17 @@ const Navbar = () => {
                 </div>
                 <ul
                   tabIndex={0}
-                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow-lg border border-base-300"
+                  className="menu menu-sm dropdown-content bg-gray-200 rounded-box z-[1] mt-3 w-52 p-2 shadow-lg border border-base-300"
                 >
                   <li className="menu-title">
-                    <span>{user.email || "User"}</span>
+                    <span className="wrap-anywhere text-black">
+                      {user.displayName || "User Name"}
+                    </span>
+                  </li>
+                  <li className="menu-title">
+                    <span className="wrap-anywhere text-black">
+                      {user.email || "User Email"}
+                    </span>
                   </li>
                 </ul>
               </div>

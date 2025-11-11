@@ -11,8 +11,9 @@ import {
   BarChart3,
 } from "lucide-react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import CircularGallery from "./CircularGallery";
+// import CircularGallery from "./CircularGallery";
 import HeroBanner from "./HeroBanner";
+import LatestJobs from "./LatestJobs";
 
 const Home = () => {
   const axiosSecure = useAxiosSecure();
@@ -25,15 +26,8 @@ const Home = () => {
       .get("/jobs")
       .then((response) => {
         const jobs = response.data;
-        // setAllJob(jobs);
-
-        // Sort by date (newest first) and get latest 6
-        const sorted = [...jobs]
-          .sort(
-            (a, b) =>
-              new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date)
-          )
-          .slice(0, 6);
+        // sorted in backend get latest 6
+        const sorted = [...jobs].slice(0, 6);
 
         setLatestJobs(sorted);
         setLoading(false);
@@ -58,61 +52,8 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900  to-slate-900">
       {/* ---------------Hero Banner ---------------*/}
       <HeroBanner></HeroBanner>
-      {/* Latest Jobs Circular Gallery */}
-      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
-        <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
-            Latest Opportunities
-          </h2>
-          <p className="text-gray-300 text-base sm:text-lg px-4">
-            Discover the newest job postings on our platform
-          </p>
-        </div>
-
-        {loading ? (
-          <div className="flex justify-center items-center h-64 sm:h-80 md:h-96">
-            <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-2 border-b-2 border-purple-500"></div>
-          </div>
-        ) : latestJobs.length > 0 ? (
-          <div
-            className="relative"
-            style={{
-              height: "400px",
-              minHeight: "300px",
-            }}
-          >
-            <div className="hidden sm:block" style={{ height: "100%" }}>
-              <CircularGallery
-                items={galleryItems}
-                bend={3}
-                textColor="#ffffff"
-                borderRadius={0.05}
-                scrollEase={0.05}
-                scrollSpeed={2}
-                font="bold 20px sans-serif"
-              />
-            </div>
-            <div className="block sm:hidden" style={{ height: "100%" }}>
-              <CircularGallery
-                items={galleryItems}
-                bend={2}
-                textColor="#ffffff"
-                borderRadius={0.08}
-                scrollEase={0.08}
-                scrollSpeed={1.5}
-                font="bold 16px sans-serif"
-              />
-            </div>
-          </div>
-        ) : (
-          <div className="text-center py-12 sm:py-16 md:py-20 px-4">
-            <p className="text-gray-400 text-lg sm:text-xl">
-              No jobs available at the moment.
-            </p>
-          </div>
-        )}
-      </div> */}
-
+      {/* ---------------latest job--------------------- */}
+      <LatestJobs jobs={latestJobs} loading={loading} />
       {/* -------------------Featured Categories */}
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
@@ -137,9 +78,8 @@ const Home = () => {
           ].map((category) => {
             const IconComponent = category.icon;
             return (
-              <Link
+              <a
                 key={category.name}
-                to={`/jobs?category=${category.name.toLowerCase()}`}
                 className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center border border-white/20 hover:bg-white/20 transition-all transform hover:scale-105 group"
               >
                 <div className="flex justify-center mb-3">
@@ -154,7 +94,7 @@ const Home = () => {
                 <div className="text-gray-400 text-sm">
                   {category.count} jobs
                 </div>
-              </Link>
+              </a>
             );
           })}
         </div>
