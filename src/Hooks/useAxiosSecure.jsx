@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import useAuth from "./useAuth";
 import { useNavigate } from "react-router";
+import { getAuth } from "firebase/auth";
 
 const instance = axios.create({
   baseURL: "http://localhost:3000",
@@ -13,8 +14,16 @@ const useAxiosSecure = () => {
   const navigate = useNavigate();
   useEffect(() => {
     // Add a request interceptor
-    const reqInceptors = instance.interceptors.request.use((config) => {
+    const reqInceptors = instance.interceptors.request.use(async (config) => {
       // Do something before request is sent
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+
+      // If user is logged in, attach the Firebase token
+      if (currentUser) {
+        const token = await currentUser.getIdToken();
+        config.headers.Authorization = `Bearer ${token}`;
+      }
       return config;
     });
 
