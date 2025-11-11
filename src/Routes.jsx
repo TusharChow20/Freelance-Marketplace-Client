@@ -37,7 +37,7 @@ const router = createBrowserRouter([
       {
         path: "/allJobs/:id",
         loader: ({ params }) =>
-          axios(`http://localhost:3000/jobs/${params.id}`),
+          axios(`https://freelance-marketplace-server-azure.vercel.app/jobs/${params.id}`),
         element: (
           <PrivateRoute>
             <JobDetails></JobDetails>

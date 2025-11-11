@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { getAuth } from "firebase/auth";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://freelance-marketplace-server-azure.vercel.app",
 });
 
 const useAxiosSecure = () => {
