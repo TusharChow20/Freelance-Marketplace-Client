@@ -137,7 +137,7 @@ const Navbar = () => {
                   </li>
                   <li className="menu-title">
                     <span className="wrap-anywhere text-black">
-                      {user.email || "User Email"}
+                      {user.photoURL || "User Email"}
                     </span>
                   </li>
                 </ul>

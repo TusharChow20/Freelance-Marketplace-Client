@@ -13,15 +13,23 @@ const Register = () => {
   const handleGoogleLogin = () => {
     googleLogin()
       .then(() => {
-        toast.success(`Google registration successful! Redirecting..........`, {
-          duration: 3000,
-          position: "top-right",
-          style: {
-            background: "#10b981",
-            color: "#fff",
-          },
-          icon: "🎉",
-        });
+        setTimeout(() => {
+          toast.success(
+            `Google registration successful! Redirecting..........`,
+            {
+              duration: 2000,
+              position: "top-right",
+              style: {
+                background: "#10b981",
+                color: "#fff",
+              },
+              icon: "🎉",
+            }
+          );
+        }, 100);
+        setTimeout(() => {
+          navigate("/");
+        }, 2200);
       })
       .catch((error) => {
         toast.error(error.message, {
