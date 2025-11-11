@@ -13,6 +13,7 @@ const JobDetails = () => {
   const logggedInUserEmail = user?.email;
   const jobCreatorEmail = data?.userEmail;
   const isJobCreator = logggedInUserEmail === jobCreatorEmail;
+  // console.log("accept email, data", acceptEmail, data);
 
   useEffect(() => {
     if (!user?.email) return;
@@ -21,12 +22,11 @@ const JobDetails = () => {
       .then((data) => setAcceptEmail(data.data));
   }, [axiosInstance, user]);
 
-  const isAccepted = acceptEmail?.some(
-    (item) => item.courseTitle === data?.title
-  );
+  const isAccepted = acceptEmail?.some((item) => item.courseId === data?._id);
 
   const handleAcceptJob = async () => {
     const acceptedJobsUser = {
+      courseId: data._id,
       name: user.displayName,
       email: user.email,
       courseTitle: data.title,
@@ -37,8 +37,8 @@ const JobDetails = () => {
       await axiosInstance.post("/acceptedJob", acceptedJobsUser);
       setAcceptEmail((prev) => [...(prev || []), acceptedJobsUser]);
       toast.success("Job accepted successfully!");
-    } catch (error) {
-      console.error("Error accepting job:", error);
+    } catch {
+      // console.error("Error accepting job:", error);
       toast.error("Failed to accept job");
     }
   };
@@ -54,8 +54,8 @@ const JobDetails = () => {
       setTimeout(() => {
         navigate("/allJobs");
       }, 1000);
-    } catch (err) {
-      console.error("Error deleting job:", err);
+    } catch {
+      // console.error("Error deleting job:", err);
       toast.error("Failed to delete job. Please try again.");
     }
   };

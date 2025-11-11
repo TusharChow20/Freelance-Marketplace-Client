@@ -35,8 +35,8 @@ const Home = () => {
         setLatestJobs(sorted);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Error fetching jobs:", error);
+      .catch(() => {
+        // console.error("Error fetching jobs:", error);
         setLoading(false);
       });
   }, [axiosSecure]);

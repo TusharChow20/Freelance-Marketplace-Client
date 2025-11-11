@@ -7,8 +7,7 @@ const LoadingFallback = () => {
   useEffect(() => {
     fetch("/public/Sandy Loading.json")
       .then((res) => res.json())
-      .then((data) => setAnimationData(data))
-      .catch((err) => console.error("Failed to load animation:", err));
+      .then((data) => setAnimationData(data));
   }, []);
 
   return (

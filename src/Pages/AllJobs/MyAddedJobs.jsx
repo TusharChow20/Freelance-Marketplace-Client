@@ -20,7 +20,7 @@ const MyAddedJobs = () => {
     }
   }, [allJob, user]);
 
-  console.log(myPostedJob);
+  // console.log(myPostedJob);
 
   return (
     <div className="container mx-auto px-4 py-8">

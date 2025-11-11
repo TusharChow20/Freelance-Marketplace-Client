@@ -55,8 +55,8 @@ const UpdateJob = () => {
       setTimeout(() => {
         navigate(-1);
       }, 1000);
-    } catch (error) {
-      console.error("Error updating job:", error);
+    } catch {
+      // console.error("Error updating job:", error);
       toast.error("Failed to update job");
     } finally {
       setLoading(false);

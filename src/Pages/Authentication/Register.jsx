@@ -125,8 +125,8 @@ const Register = () => {
             });
             navigate("/");
           })
-          .catch((error) => {
-            console.error("Profile update failed:", error);
+          .catch(() => {
+            // console.error("Profile update failed:", error);
             toast.error("Profile update failed. Please try again.", {
               duration: 3000,
               position: "top-right",

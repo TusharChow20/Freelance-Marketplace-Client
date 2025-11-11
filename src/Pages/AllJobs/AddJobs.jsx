@@ -53,9 +53,9 @@ const AddJobs = () => {
 
       toast.success("Job posted successfully!");
       e.target.reset();
-    } catch (error) {
+    } catch {
       toast.error("Failed to post job. Please try again.");
-      console.error(error);
+      // console.error(error);
     }
   };
 

@@ -12,8 +12,8 @@ const AcceptedJob = () => {
     if (!user?.email) return;
     axiosInstance
       .get(`/acceptedJob?email=${user.email}`)
-      .then((res) => setJobData(res.data))
-      .catch((err) => console.error("Error fetching accepted jobs:", err));
+      .then((res) => setJobData(res.data));
+    // .catch((err) => console.error("Error fetching accepted jobs:", err));
   }, [axiosInstance, user]);
 
   const handleRemoveOrDone = async (id) => {
@@ -27,9 +27,7 @@ const AcceptedJob = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-5 text-center">
-        Accepted Jobs
-      </h2>
+      <h2 className="text-2xl font-semibold mb-5 text-center">Accepted Jobs</h2>
 
       {jobData.length === 0 ? (
         <p className="text-center text-gray-500">No accepted jobs yet.</p>

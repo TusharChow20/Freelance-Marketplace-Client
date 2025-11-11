@@ -10,8 +10,8 @@ const Error404 = () => {
   useEffect(() => {
     fetch("/public/Page Not Found 404.json")
       .then((res) => res.json())
-      .then((data) => setAnimationData(data))
-      .catch((err) => console.error("Failed to load animation:", err));
+      .then((data) => setAnimationData(data));
+    // .catch((err) => console.error("Failed to load animation:", err));
   }, []);
 
   return (

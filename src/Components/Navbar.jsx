@@ -5,13 +5,13 @@ import { User } from "lucide-react";
 
 const Navbar = () => {
   const { user, logOut } = use(AuthContext);
-  console.log(user);
+  // console.log(user);
 
   const handleSignOut = () => {
     logOut().catch((error) => console.log(error));
   };
   return (
-    <div className="sticky top-0 left-0 right-0 z-[9999] p-1">
+    <div className="sticky lg:relative top-0 left-0 right-0 z-[9999] p-1">
       <div className="navbar bg-base-100/80 backdrop-blur-md shadow-sm px-1 md:px-10 ">
         <div className="navbar-start ">
           <div className="dropdown">
@@ -87,7 +87,7 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div className="navbar-end gap-5">
+        <div className="navbar-end gap-2">
           <label className="swap swap-rotate">
             <input type="checkbox" className="theme-controller" value="dark" />
             <svg
