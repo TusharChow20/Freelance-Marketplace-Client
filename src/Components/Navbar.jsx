@@ -8,14 +8,12 @@ const Navbar = () => {
   console.log(user);
 
   const handleSignOut = () => {
-    logOut()
-      .then((res) => console.log("googd"))
-      .catch((error) => console.log(error));
+    logOut().catch((error) => console.log(error));
   };
   return (
-    <div className="sticky top-0 left-0 right-0 z-[9999]">
-      <div className="navbar bg-base-100/80 backdrop-blur-md shadow-sm px-1 md:px-10">
-        <div className="navbar-start">
+    <div className="sticky top-0 left-0 right-0 z-[9999] p-1">
+      <div className="navbar bg-base-100/80 backdrop-blur-md shadow-sm px-1 md:px-10 ">
+        <div className="navbar-start ">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg

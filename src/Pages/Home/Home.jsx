@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
   Monitor,
@@ -15,8 +15,10 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import HeroBanner from "./HeroBanner";
 import LatestJobs from "./LatestJobs";
 import UserReviews from "./UserReviews ";
+import { AuthContext } from "../../Provider/AuthContext";
 
 const Home = () => {
+  const { user } = use(AuthContext);
   const axiosSecure = useAxiosSecure();
   // const [allJob, setAllJob] = useState([]);
   const [latestJobs, setLatestJobs] = useState([]);
@@ -160,12 +162,21 @@ const Home = () => {
             Join thousands of professionals finding their perfect job match
             today
           </p>
-          <Link
-            to="/signup"
-            className="inline-block bg-white text-purple-600 px-10 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl"
-          >
-            Sign Up Now
-          </Link>
+          {user ? (
+            <Link
+              to="/allJobs"
+              className="inline-block bg-white text-purple-600 px-10 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl"
+            >
+              Explore Jobs
+            </Link>
+          ) : (
+            <Link
+              to="/register"
+              className="inline-block bg-white text-purple-600 px-10 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl"
+            >
+              Sign Up Now
+            </Link>
+          )}
         </div>
       </div>
     </div>

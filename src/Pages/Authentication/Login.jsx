@@ -9,7 +9,7 @@ const Login = () => {
   const { googleLogin, logIn } = use(AuthContext);
   const handleGoogleLogin = () => {
     googleLogin()
-      .then((res) => {
+      .then(() => {
         toast.success(
           `Google login successful! Redirecting to ${location.state || "Home"}`,
           {
