@@ -12,11 +12,13 @@ import UpdateJob from "./Pages/AllJobs/UpdateJob";
 import PrivateRoute from "./Provider/PrivateRoute";
 import Error404 from "./Pages/Error/Error404";
 import MyAddedJobs from "./Pages/AllJobs/MyAddedJobs";
+import LoadingFallback from "./Loading/Loading";
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: MainLayout,
+    HydrateFallback: LoadingFallback,
     children: [
       {
         index: true,
@@ -37,7 +39,9 @@ const router = createBrowserRouter([
       {
         path: "/allJobs/:id",
         loader: ({ params }) =>
-          axios(`https://freelance-marketplace-server-azure.vercel.app/jobs/${params.id}`),
+          axios(
+            `https://freelance-marketplace-server-azure.vercel.app/jobs/${params.id}`
+          ),
         element: (
           <PrivateRoute>
             <JobDetails></JobDetails>
