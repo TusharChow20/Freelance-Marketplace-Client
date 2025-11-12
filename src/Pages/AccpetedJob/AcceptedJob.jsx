@@ -2,18 +2,25 @@ import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../Provider/AuthContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { CheckCircle, XCircle } from "lucide-react";
+import Loading from "../../Loading/Loading";
 
 const AcceptedJob = () => {
   const { user } = useContext(AuthContext);
   const axiosInstance = useAxiosSecure();
   const [jobData, setJobData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user?.email) return;
     axiosInstance
       .get(`/acceptedJob?email=${user.email}`)
-      .then((res) => setJobData(res.data));
-    // .catch((err) => console.error("Error fetching accepted jobs:", err));
+      .then((res) => {
+        setJobData(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, [axiosInstance, user]);
 
   const handleRemoveOrDone = async (id) => {
@@ -29,7 +36,9 @@ const AcceptedJob = () => {
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-5 text-center">Accepted Jobs</h2>
 
-      {jobData.length === 0 ? (
+      {loading ? (
+        <Loading />
+      ) : jobData.length === 0 ? (
         <p className="text-center text-gray-500">No accepted jobs yet.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
