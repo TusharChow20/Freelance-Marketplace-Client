@@ -131,3 +131,13 @@ To provide a smooth, secure, and responsive experience for freelancers and clien
   }
 }
 ```
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn package manager
+
+### Installation Steps
+
+1. **Clone the repository**
+```bash
