@@ -5,7 +5,7 @@ import CardSwap, { Card } from "./CardSwap";
 
 const HeroBanner = () => {
   return (
-    <div className="relative overflow-hidden min-h-[85vh] bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="relative overflow-hidden h-[55vh] md:h-[60vh] lg:h-[70vh] max-h-[70vh] bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Light Rays Background */}
       <div className="absolute inset-0 z-0">
         <LightRays
@@ -37,10 +37,10 @@ const HeroBanner = () => {
           ></div>
         ))}
       </div>
-      <div className="max-w-7xl mx-auto px-6 py-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[600px]">
-          <div className="space-y-8 text-center lg:text-left">
-            <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+      <div className="max-w-7xl mx-auto px-6 py-6 relative z-10 h-full flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full h-full">
+          <div className="space-y-6 text-center lg:text-left">
+            <h1 className="text-xl md:text-3xl lg:text-5xl font-bold text-white leading-tight">
               Your Trusted Job
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
                 Marketplace
@@ -55,23 +55,23 @@ const HeroBanner = () => {
             <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-8">
               <Link
                 to="/allJobs"
-                className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-2xl hover:shadow-purple-500/50 relative overflow-hidden"
+                className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 md:px-10 md:py-4 rounded-xl font-semibold text-md md:text-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-2xl hover:shadow-purple-500/50 relative overflow-hidden"
               >
                 <span className="relative z-10">Browse Jobs</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
               <Link
                 to="/add-job"
-                className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 hover:border-white/50 transition-all transform hover:scale-105 shadow-xl"
+                className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-6 py-3 md:px-10 md:py-4 rounded-xl font-semibold text-md md:text-lg hover:bg-white/20 hover:border-white/50 transition-all transform hover:scale-105 shadow-xl"
               >
                 Create a Job
               </Link>
             </div>
           </div>
-          <div className="hidden lg:block relative h-[600px]">
+          <div className="hidden lg:block relative h-full">
             <CardSwap
-              width={400}
-              height={500}
+              width={360}
+              height={"100%"}
               cardDistance={50}
               verticalDistance={60}
               delay={2000}
@@ -146,6 +146,29 @@ const HeroBanner = () => {
           </div>
         </div>
       </div>
+
+      {/* Scroll hint to next section */}
+      <a
+        href="#latest-jobs"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
+      >
+        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white animate-bounce">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </a>
 
       {/* Stats Section */}
       <div className="max-w-7xl mx-auto px-6 pb-16 relative z-10">

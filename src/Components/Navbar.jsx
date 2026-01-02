@@ -45,6 +45,9 @@ const Navbar = () => {
                 <NavLink to="/add-job">Add a Job</NavLink>
               </li>
               <li>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+              </li>
+              <li>
                 <NavLink to="/my-accepted-tasks">My Accepted Tasks</NavLink>
               </li>
               <li>
@@ -79,6 +82,11 @@ const Navbar = () => {
             <li>
               <NavLink to="/add-job">Add a Job</NavLink>
             </li>
+            {user && (
+              <li>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+              </li>
+            )}
             <li>
               <NavLink to="/my-accepted-tasks">My Accepted Tasks</NavLink>
             </li>
@@ -137,8 +145,19 @@ const Navbar = () => {
                   </li>
                   <li className="menu-title">
                     <span className="wrap-anywhere text-black">
-                      {user.photoURL || "User Email"}
+                      {user.email || "User Email"}
                     </span>
+                  </li>
+                  <li>
+                    <NavLink to="/dashboard">Dashboard</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/dashboard/profile">Profile</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/login" onClick={handleSignOut}>
+                      Sign Out
+                    </NavLink>
                   </li>
                 </ul>
               </div>

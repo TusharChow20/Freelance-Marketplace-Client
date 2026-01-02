@@ -15,6 +15,8 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import HeroBanner from "./HeroBanner";
 import LatestJobs from "./LatestJobs";
 import UserReviews from "./UserReviews ";
+import Newsletter from "./Newsletter";
+import FAQ from "./FAQ";
 import { AuthContext } from "../../Provider/AuthContext";
 
 const Home = () => {
@@ -56,10 +58,12 @@ const Home = () => {
       {/* ---------------Hero Banner ---------------*/}
       <HeroBanner></HeroBanner>
       {/* ---------------latest job--------------------- */}
-      <LatestJobs jobs={latestJobs} loading={loading} />
+      <section id="latest-jobs">
+        <LatestJobs jobs={latestJobs} loading={loading} />
+      </section>
       {/* -------------------Featured Categories */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="text-center mb-12">
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Browse by Category
           </h2>
@@ -153,6 +157,13 @@ const Home = () => {
 
       {/* -----------------------User Reviews Section */}
       <UserReviews></UserReviews>
+
+      {/* Newsletter */}
+      <Newsletter />
+
+      {/* FAQ */}
+      <FAQ />
+
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className=" rounded-2xl p-12 text-center">
           <h2 className="text-4xl font-bold text-white mb-4">

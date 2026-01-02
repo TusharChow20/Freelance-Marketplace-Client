@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router";
 
 const Footer = () => {
   return (
@@ -20,26 +21,48 @@ const Footer = () => {
             Task Rio
             <br />
             Providing reliable tech since 2002
+            <br />
+            <a href="mailto:contact@taskrio.com" className="link link-hover">
+              contact@taskrio.com
+            </a>
             <br />© {new Date().getFullYear()} Task Rio. All rights reserved.
           </p>
         </aside>
         <nav>
           <h6 className="footer-title">Services</h6>
-          <a className="link link-hover">Branding</a>
-          <a className="link link-hover">Design</a>
-          <a className="link link-hover">Marketing</a>
-          <a className="link link-hover">Advertisement</a>
+          <NavLink to="/services" className="link link-hover">
+            Branding
+          </NavLink>
+          <NavLink to="/services" className="link link-hover">
+            Design
+          </NavLink>
+          <NavLink to="/services" className="link link-hover">
+            Marketing
+          </NavLink>
+          <NavLink to="/services" className="link link-hover">
+            Advertisement
+          </NavLink>
         </nav>
         <nav>
           <h6 className="footer-title">Company</h6>
-          <a className="link link-hover">About us</a>
-          <a className="link link-hover">Contact</a>
-          <a className="link link-hover">Jobs</a>
+          <NavLink to="/about" className="link link-hover">
+            About us
+          </NavLink>
+          <NavLink to="/contact" className="link link-hover">
+            Contact
+          </NavLink>
+          <NavLink to="/allJobs" className="link link-hover">
+            Jobs
+          </NavLink>
         </nav>
         <nav>
           <h6 className="footer-title">Legal</h6>
-          <a className="link link-hover">Terms of use</a>
-          <a className="link link-hover">Privacy policy</a>
+          <NavLink to="/terms" className="link link-hover">
+            Terms of use
+          </NavLink>
+          <NavLink to="/privacy" className="link link-hover">
+            Privacy policy
+          </NavLink>
         </nav>
       </footer>
     </div>

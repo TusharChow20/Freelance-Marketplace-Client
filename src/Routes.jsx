@@ -12,6 +12,13 @@ import UpdateJob from "./Pages/AllJobs/UpdateJob";
 import PrivateRoute from "./Provider/PrivateRoute";
 import Error404 from "./Pages/Error/Error404";
 import MyAddedJobs from "./Pages/AllJobs/MyAddedJobs";
+import About from "./Pages/About";
+import Contact from "./Pages/Contact";
+import Terms from "./Pages/Terms";
+import Privacy from "./Pages/Privacy";
+import DashboardLayout from "./Layout/DashboardLayout";
+import DashboardHome from "./Pages/Dashboard/DashboardHome";
+import Profile from "./Pages/Dashboard/Profile";
 import LoadingFallback from "./Loading/Loading";
 
 const router = createBrowserRouter([
@@ -56,6 +63,34 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      // Dashboard routes (user-only)
+      {
+        path: "/dashboard",
+        element: (
+          <PrivateRoute>
+            <DashboardLayout />
+          </PrivateRoute>
+        ),
+        children: [
+          {
+            index: true,
+            Component: DashboardHome,
+          },
+          {
+            path: "my-jobs",
+            Component: MyAddedJobs,
+          },
+          {
+            path: "accepted",
+            Component: AcceptedJob,
+          },
+          {
+            path: "profile",
+            Component: Profile,
+          },
+        ],
+      },
+      // legacy direct routes (still supported for now)
       {
         path: "/myAddedJobs",
 
@@ -76,6 +111,22 @@ const router = createBrowserRouter([
       {
         path: "/update-job/:id",
         Component: UpdateJob,
+      },
+      {
+        path: "/about",
+        Component: About,
+      },
+      {
+        path: "/contact",
+        Component: Contact,
+      },
+      {
+        path: "/terms",
+        Component: Terms,
+      },
+      {
+        path: "/privacy",
+        Component: Privacy,
       },
     ],
   },

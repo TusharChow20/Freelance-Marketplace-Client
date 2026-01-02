@@ -5,7 +5,7 @@ const Jobs = ({ job }) => {
   //   console.log(job._id);
 
   return (
-    <div className="card bg-base-100 w-full h-[450px] shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-300 overflow-hidden group">
+    <div className="card bg-base-100 w-full h-[450px] shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-300 overflow-hidden group relative z-10">
       <figure className="h-full relative">
         {job.coverImage ? (
           <img
@@ -23,7 +23,7 @@ const Jobs = ({ job }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/75 to-black/100"></div>
       </figure>
 
-      <div className="card-body absolute inset-0 justify-between text-white z-10">
+      <div className="card-body absolute inset-0 justify-between text-white z-20">
         <div>
           <div className="mb-3">
             <span className="badge badge-primary badge-md font-semibold shadow-lg">
