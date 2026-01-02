@@ -25,7 +25,7 @@ const Error404 = () => {
         <h1 className="text-3xl font-bold text-gray-800 mt-6 mb-2">
           Oops! Something went wrong
         </h1>
-        <p className="text-gray-600 mb-6">
+        <p className="text-gray-700 mb-6">
           {error?.message || error?.data || "An unexpected error occurred."}
         </p>
         <div className="flex gap-4 justify-center">

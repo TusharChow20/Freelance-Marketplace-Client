@@ -10,6 +10,29 @@ const JobDetails = () => {
   const { user } = use(AuthContext);
   const navigate = useNavigate();
   const [acceptEmail, setAcceptEmail] = useState();
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [activeImage, setActiveImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [relatedJobs, setRelatedJobs] = useState([]);
+
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+
+  // editing state for user's own reviews
+  const [editingReviewId, setEditingReviewId] = useState(null);
+  const [editText, setEditText] = useState("");
+  const [editRating, setEditRating] = useState(5);
+  const [editSubmitting, setEditSubmitting] = useState(false);
+
+  const averageRating = reviews.length
+    ? (
+        reviews.reduce((sum, r) => sum + (Number(r.rating) || 0), 0) /
+        reviews.length
+      ).toFixed(1)
+    : null;
+
   const logggedInUserEmail = user?.email;
   const jobCreatorEmail = data?.userEmail;
   const isJobCreator = logggedInUserEmail === jobCreatorEmail;
@@ -23,6 +46,70 @@ const JobDetails = () => {
   }, [axiosInstance, user]);
 
   const isAccepted = acceptEmail?.some((item) => item.courseId === data?._id);
+
+  // Prepare gallery
+  useEffect(() => {
+    const images = [];
+    if (data) {
+      if (Array.isArray(data.images) && data.images.length > 0)
+        images.push(...data.images);
+      if (data.coverImage) images.unshift(data.coverImage);
+
+      // ensure images are unique and valid URLs
+      const uniq = [...new Set(images.filter(Boolean))];
+      images.length = 0;
+      images.push(...uniq);
+    }
+    // fallback to placeholder image if empty
+    if (images.length === 0)
+      images.push(`https://picsum.photos/seed/${data._id}/1000/600`);
+    setGalleryImages(images);
+    setActiveImage(0);
+  }, [data]);
+
+  // Reviews fetching and lightbox keyboard navigation
+  const fetchReviews = async () => {
+    if (!data?._id) return;
+    try {
+      const res = await axiosInstance.get(`/reviews?jobId=${data._id}`);
+      setReviews(res.data || []);
+    } catch {
+      setReviews([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+
+    // keyboard navigation for lightbox
+    const onKey = (e) => {
+      if (!lightboxOpen) return;
+      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "ArrowLeft")
+        setActiveImage(
+          (i) => (i - 1 + galleryImages.length) % galleryImages.length
+        );
+      if (e.key === "ArrowRight")
+        setActiveImage((i) => (i + 1) % galleryImages.length);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lightboxOpen, galleryImages.length, data?._id]);
+
+  // Fetch related jobs by category
+  useEffect(() => {
+    if (!data?.category) return;
+    axiosInstance
+      .get(`/jobs?category=${encodeURIComponent(data.category)}`)
+      .then((res) => {
+        const related = (res.data || [])
+          .filter((j) => j._id !== data._id)
+          .slice(0, 8);
+        setRelatedJobs(related);
+      })
+      .catch(() => setRelatedJobs([]));
+  }, [axiosInstance, data]);
 
   const handleAcceptJob = async () => {
     const acceptedJobsUser = {
@@ -55,8 +142,18 @@ const JobDetails = () => {
         navigate("/allJobs");
       }, 1000);
     } catch {
-      // console.error("Error deleting job:", err);
+      // console.error("Error deleting job");
       toast.error("Failed to delete job. Please try again.");
+    }
+  };
+
+  const handleDeleteReview = async (id) => {
+    try {
+      await axiosInstance.delete(`/reviews/${id}`);
+      toast.success("Review deleted");
+      fetchReviews();
+    } catch {
+      toast.error("Failed to delete review.");
     }
   };
   if (!data || !user) {
@@ -69,14 +166,101 @@ const JobDetails = () => {
 
   return (
     <div className="min-h-screen bg-base-200 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="card bg-base-100 shadow-xl">
-          <figure className="h-64 md:h-80 overflow-hidden">
-            <img
-              src={data.coverImage}
-              alt={data.title}
-              className="w-full h-full object-cover"
-            />
+          {/* Lightbox modal */}
+          {lightboxOpen && (
+            <div
+              role="dialog"
+              aria-modal="true"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+              onClick={() => setLightboxOpen(false)}
+            >
+              <button
+                aria-label="Close image"
+                className="absolute top-6 right-6 btn btn-ghost btn-circle"
+                onClick={() => setLightboxOpen(false)}
+              >
+                ✕
+              </button>
+
+              <div
+                className="max-w-5xl w-full relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img
+                  src={galleryImages[activeImage]}
+                  alt={`Large ${data.title}`}
+                  className="w-full h-[70vh] object-contain rounded"
+                />
+
+                <div className="absolute inset-y-0 left-0 flex items-center">
+                  <button
+                    aria-label="Previous image"
+                    className="btn btn-circle btn-ghost"
+                    onClick={() =>
+                      setActiveImage(
+                        (i) =>
+                          (i - 1 + galleryImages.length) % galleryImages.length
+                      )
+                    }
+                  >
+                    ‹
+                  </button>
+                </div>
+                <div className="absolute inset-y-0 right-0 flex items-center">
+                  <button
+                    aria-label="Next image"
+                    className="btn btn-circle btn-ghost"
+                    onClick={() =>
+                      setActiveImage((i) => (i + 1) % galleryImages.length)
+                    }
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          <figure className="mb-4">
+            <div className="w-full h-64 md:h-80 overflow-hidden rounded-md bg-gray-100">
+              <img
+                role="button"
+                tabIndex={0}
+                onClick={() => setLightboxOpen(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") setLightboxOpen(true);
+                }}
+                src={galleryImages[activeImage]}
+                alt={data.title}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover transition-all duration-300 cursor-zoom-in"
+              />
+            </div>
+
+            <div className="mt-3 flex gap-2 overflow-x-auto">
+              {galleryImages.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImage(idx)}
+                  aria-label={`View image ${idx + 1}`}
+                  className={`w-20 h-12 rounded overflow-hidden border-2 shrink-0 ${
+                    idx === activeImage
+                      ? "border-primary ring-2 ring-primary"
+                      : "border-base-300"
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt={`${data.title} ${idx + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
           </figure>
 
           <div className="card-body p-6 md:p-8">
@@ -193,7 +377,7 @@ const JobDetails = () => {
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm text-base-content/60">Posted by</p>
+                  <p className="text-sm text-base-content/80">Posted by</p>
                   <p className="font-semibold text-lg">
                     {data.postedBy || "Unknown"}
                   </p>
@@ -218,7 +402,7 @@ const JobDetails = () => {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-base-content/60">Posted on</p>
+                  <p className="text-sm text-base-content/80">Posted on</p>
                   <p className="font-semibold text-lg">
                     {new Date(data.postedDate).toLocaleDateString("en-US", {
                       year: "numeric",
@@ -247,16 +431,16 @@ const JobDetails = () => {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-base-content/60">Contact Email</p>
+                  <p className="text-sm text-base-content/80">Contact Email</p>
                   <p className="font-semibold text-lg wrap-anywhere">
                     {data.userEmail}
                   </p>
                 </div>
               </div>
             </div>
-            <div className="bg-base-200/50 p-6 rounded-lg">
+            <div className="bg-base-200/70 p-6 rounded-lg">
               <h3 className="text-2xl font-bold mb-4">About this Job</h3>
-              <p className="text-base-content/80 leading-relaxed mb-4">
+              <p className="text-base-content leading-relaxed mb-4">
                 {data.summary}
               </p>
               <div className="flex flex-wrap gap-2 mt-4">
@@ -268,9 +452,252 @@ const JobDetails = () => {
                   Flexible Hours
                 </div>
               </div>
+
+              {/* Reviews */}
+              <div className="mt-6">
+                <h4 className="text-xl font-semibold mb-3 flex items-center gap-3">
+                  <span>Reviews ({reviews.length})</span>
+                  {averageRating && (
+                    <span className="text-sm text-primary flex items-center gap-2">
+                      <span className="font-semibold">★ {averageRating}</span>
+                      <span className="text-base-content/70 text-xs">
+                        ({reviews.length})
+                      </span>
+                    </span>
+                  )}
+                </h4>
+                <div className="space-y-4">
+                  {reviews.length === 0 && (
+                    <p className="text-sm text-base-content/80">
+                      No reviews yet. Be the first to leave one!
+                    </p>
+                  )}
+
+                  {reviews.map((r) => {
+                    const isMine = r.userEmail === user?.email;
+                    const isEditing = editingReviewId === r._id;
+                    return (
+                      <div
+                        key={r._id || r.createdAt}
+                        className="p-4 bg-base-100 rounded-lg"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <div className="font-semibold">
+                              {r.name || r.userEmail}
+                            </div>
+                            <div className="text-sm text-base-content/80">
+                              {new Date(r.createdAt).toLocaleDateString()}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <div className="text-sm text-primary">
+                              {Array.from({ length: r.rating || 5 }).map(
+                                (_, i) => (
+                                  <span key={i}>★</span>
+                                )
+                              )}
+                            </div>
+                            {isMine && !isEditing && (
+                              <div className="flex items-center gap-2">
+                                <button
+                                  aria-label="Edit review"
+                                  className="btn btn-sm btn-ghost"
+                                  onClick={() => {
+                                    setEditingReviewId(r._id);
+                                    setEditText(r.text || "");
+                                    setEditRating(r.rating || 5);
+                                  }}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  aria-label="Delete review"
+                                  className="btn btn-sm btn-ghost text-error"
+                                  onClick={async () =>
+                                    handleDeleteReview(r._id)
+                                  }
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {!isEditing ? (
+                          <div className="text-base-content/80">{r.text}</div>
+                        ) : (
+                          <form
+                            onSubmit={async (e) => {
+                              e.preventDefault();
+                              setEditSubmitting(true);
+                              try {
+                                await axiosInstance.put(`/reviews/${r._id}`, {
+                                  text: editText,
+                                  rating: editRating,
+                                });
+                                toast.success("Review updated");
+                                setEditingReviewId(null);
+                                fetchReviews();
+                              } catch {
+                                toast.error("Failed to update review.");
+                              } finally {
+                                setEditSubmitting(false);
+                              }
+                            }}
+                            className="space-y-2"
+                          >
+                            <textarea
+                              className="textarea textarea-bordered w-full mb-2"
+                              value={editText}
+                              onChange={(e) => setEditText(e.target.value)}
+                            ></textarea>
+                            <div className="flex items-center gap-2">
+                              <select
+                                className="select select-bordered w-28"
+                                value={editRating}
+                                onChange={(e) =>
+                                  setEditRating(Number(e.target.value))
+                                }
+                              >
+                                <option value={5}>5 - Excellent</option>
+                                <option value={4}>4 - Good</option>
+                                <option value={3}>3 - Okay</option>
+                                <option value={2}>2 - Poor</option>
+                                <option value={1}>1 - Terrible</option>
+                              </select>
+                              <button
+                                type="submit"
+                                className={`btn btn-primary btn-sm ${
+                                  editSubmitting ? "loading" : ""
+                                }`}
+                              >
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-ghost btn-sm"
+                                onClick={() => setEditingReviewId(null)}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </form>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {user ? (
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        if (!reviewText.trim()) {
+                          toast.error(
+                            "Please write a review before submitting."
+                          );
+                          return;
+                        }
+                        setReviewSubmitting(true);
+                        const newReview = {
+                          jobId: data._id,
+                          userEmail: user.email,
+                          name: user.displayName || "Anonymous",
+                          rating: reviewRating,
+                          text: reviewText,
+                          createdAt: new Date().toISOString(),
+                        };
+                        try {
+                          await axiosInstance.post("/reviews", newReview);
+                          setReviewText("");
+                          setReviewRating(5);
+                          toast.success("Review submitted!");
+                          fetchReviews();
+                        } catch {
+                          toast.error("Failed to submit review.");
+                        } finally {
+                          setReviewSubmitting(false);
+                        }
+                      }}
+                      className="mt-2"
+                    >
+                      <textarea
+                        className="textarea textarea-bordered w-full mb-2"
+                        placeholder="Write your review..."
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                      ></textarea>
+                      <div className="flex items-center gap-2">
+                        <select
+                          className="select select-bordered w-28"
+                          value={reviewRating}
+                          onChange={(e) =>
+                            setReviewRating(Number(e.target.value))
+                          }
+                        >
+                          <option value={5}>5 - Excellent</option>
+                          <option value={4}>4 - Good</option>
+                          <option value={3}>3 - Okay</option>
+                          <option value={2}>2 - Poor</option>
+                          <option value={1}>1 - Terrible</option>
+                        </select>
+                        <button
+                          type="submit"
+                          className={`btn btn-primary ${
+                            reviewSubmitting ? "loading" : ""
+                          }`}
+                        >
+                          Submit Review
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <p className="text-sm text-base-content/80 mt-2">
+                      Please log in to leave a review.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Related jobs */}
+              <div className="mt-6">
+                <h4 className="text-xl font-semibold mb-3">Related Jobs</h4>
+                {relatedJobs.length === 0 ? (
+                  <p className="text-sm text-base-content/80">
+                    No related jobs found.
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {relatedJobs.map((job) => (
+                      <div
+                        key={job._id}
+                        className="p-3 bg-base-100 rounded-lg hover:shadow-md cursor-pointer"
+                        onClick={() => navigate(`/allJobs/${job._id}`)}
+                      >
+                        <img
+                          src={
+                            job.coverImage ||
+                            `https://picsum.photos/seed/${job._id}/400/240`
+                          }
+                          alt={job.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-28 object-cover rounded"
+                        />
+                        <div className="mt-2 font-semibold">{job.title}</div>
+                        <div className="text-sm text-base-content/80">
+                          {job.category}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="card-actions justify-between items-center mt-6 pt-6 border-t border-base-300">
-              <div className="text-sm text-base-content/60">
+              <div className="text-sm text-base-content/80">
                 Job ID: {data._id}
               </div>
               <div className="flex gap-2">

@@ -14,7 +14,7 @@ const LoadingFallback = () => {
     <div className="flex items-center justify-center min-h-screen ">
       <div className="w-64 h-64">
         {animationData && <Lottie animationData={animationData} loop={true} />}
-        <p className="text-center text-gray-600 mt-4 text-lg">
+        <p className="text-center text-gray-700 mt-4 text-lg">
           <span className="loading loading-spinner loading-xl"></span>
         </p>
       </div>

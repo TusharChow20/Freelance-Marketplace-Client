@@ -1,8 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
 body {
   font-family: "Poppins", sans-serif;
 }
+/* 
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities"; */
 
+/* DaisyUI is configured in tailwind.config.js */
 @import "tailwindcss";
 
 @plugin "daisyui" {

@@ -10,6 +10,14 @@ const Register = () => {
   const { createUser, setUser } = use(AuthContext);
   const [eyeClosed, setEyeClosed] = useState(true);
   const { googleLogin } = use(AuthContext);
+
+  // Controlled form state + validation
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [photoURL, setPhotoURL] = useState("");
+  const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleGoogleLogin = () => {
     googleLogin()
       .then(() => {
@@ -69,105 +77,52 @@ const Register = () => {
     return null;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    // client-side validation
+    const errs = {};
+    if (!name) errs.name = "Name is required";
+    if (!email) errs.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      errs.email = "Enter a valid email";
+    if (!photoURL) errs.photoURL = "Photo URL is required";
+    const passErr = validatePassword(password);
+    if (passErr) errs.password = passErr;
 
-    const name = e.target.name.value;
-    const email = e.target.email.value;
-    const photoURL = e.target.photoURL.value;
-    const password = e.target.password.value;
-    // Basic validation
-    if (!name || !email || !photoURL || !password) {
-      toast.error("Please fill in all fields", {
+    setFieldErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await createUser(email, password);
+      toast.success("Registration successful! Redirecting to home...", {
         duration: 3000,
         position: "top-right",
-        style: {
-          background: "#ef4444",
-          color: "#fff",
-        },
-        icon: "❌",
+        style: { background: "#10b981", color: "#fff" },
+        icon: "✅",
       });
-      return;
-    }
 
-    // Password validation
-    const passwordError = validatePassword(password);
-    if (passwordError) {
-      toast.error(passwordError, {
+      await updateProfile(res.user, { displayName: name, photoURL });
+      setUser({ user: res.user, displayName: name, photoURL, email });
+      navigate("/");
+    } catch (error) {
+      let errorMessage = "Registration failed. Please try again.";
+      if (error.code === "auth/email-already-in-use")
+        errorMessage = "This email is already registered";
+      else if (error.code === "auth/invalid-email")
+        errorMessage = "Invalid email address";
+      else if (error.code === "auth/weak-password")
+        errorMessage = "Password is too weak";
+
+      toast.error(errorMessage, {
         duration: 4000,
         position: "top-right",
-        style: {
-          background: "#ef4444",
-          color: "#fff",
-        },
+        style: { background: "#ef4444", color: "#fff" },
         icon: "❌",
       });
-      return;
+    } finally {
+      setIsSubmitting(false);
     }
-
-    /////-----------create user---------------
-    createUser(email, password)
-      .then((res) => {
-        // console.log(res);
-
-        toast.success("Registration successful! Redirecting to home...", {
-          duration: 3000,
-          position: "top-right",
-          style: {
-            background: "#10b981",
-            color: "#fff",
-          },
-          icon: "✅",
-        });
-
-        updateProfile(res.user, {
-          displayName: name,
-          photoURL: photoURL,
-        })
-          .then(() => {
-            setUser({
-              user: res.user,
-              displayName: name,
-              photoURL: photoURL,
-              email: email,
-            });
-            navigate("/");
-          })
-          .catch(() => {
-            // console.error("Profile update failed:", error);
-            toast.error("Profile update failed. Please try again.", {
-              duration: 3000,
-              position: "top-right",
-              style: {
-                background: "#ef4444",
-                color: "#fff",
-              },
-              icon: "❌",
-            });
-          });
-      })
-      .catch((error) => {
-        //-------- Handle Firebase errors---------------
-        let errorMessage = "Registration failed. Please try again.";
-
-        if (error.code === "auth/email-already-in-use") {
-          errorMessage = "This email is already registered";
-        } else if (error.code === "auth/invalid-email") {
-          errorMessage = "Invalid email address";
-        } else if (error.code === "auth/weak-password") {
-          errorMessage = "Password is too weak";
-        }
-
-        toast.error(errorMessage, {
-          duration: 4000,
-          position: "top-right",
-          style: {
-            background: "#ef4444",
-            color: "#fff",
-          },
-          icon: "❌",
-        });
-      });
   };
 
   return (
@@ -190,7 +145,7 @@ const Register = () => {
       <div className="p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center ">Register</h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
               Name
@@ -198,9 +153,25 @@ const Register = () => {
             <input
               type="text"
               name="name"
-              className="w-full px-3 py-2 border border-gray-300 focus:border-blue-400"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                setFieldErrors((p) => ({ ...p, name: undefined }));
+              }}
+              aria-invalid={fieldErrors.name ? "true" : "false"}
+              aria-describedby="name-error"
+              className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Enter your name"
             />
+            {fieldErrors.name && (
+              <p
+                id="name-error"
+                role="alert"
+                className="text-sm text-red-600 mt-1"
+              >
+                {fieldErrors.name}
+              </p>
+            )}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
@@ -209,9 +180,25 @@ const Register = () => {
             <input
               type="email"
               name="email"
-              className="w-full px-3 py-2 border border-gray-300 "
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setFieldErrors((p) => ({ ...p, email: undefined }));
+              }}
+              aria-invalid={fieldErrors.email ? "true" : "false"}
+              aria-describedby="email-error"
+              className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Enter your email"
             />
+            {fieldErrors.email && (
+              <p
+                id="email-error"
+                role="alert"
+                className="text-sm text-red-600 mt-1"
+              >
+                {fieldErrors.email}
+              </p>
+            )}
           </div>
           <div className="mb-4">
             <label className="block text-gray-300 text-sm font-bold mb-2">
@@ -220,9 +207,25 @@ const Register = () => {
             <input
               type="url"
               name="photoURL"
-              className="w-full px-3 py-2 border border-gray-300 "
+              value={photoURL}
+              onChange={(e) => {
+                setPhotoURL(e.target.value);
+                setFieldErrors((p) => ({ ...p, photoURL: undefined }));
+              }}
+              aria-invalid={fieldErrors.photoURL ? "true" : "false"}
+              aria-describedby="photo-error"
+              className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Enter photo URL"
             />
+            {fieldErrors.photoURL && (
+              <p
+                id="photo-error"
+                role="alert"
+                className="text-sm text-red-600 mt-1"
+              >
+                {fieldErrors.photoURL}
+              </p>
+            )}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
@@ -232,7 +235,14 @@ const Register = () => {
               <input
                 type={eyeClosed ? "password" : "text"}
                 name="password"
-                className="w-full px-3 py-2 border border-gray-300 pr-10"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setFieldErrors((p) => ({ ...p, password: undefined }));
+                }}
+                aria-invalid={fieldErrors.password ? "true" : "false"}
+                aria-describedby="password-error"
+                className="w-full px-3 py-2 border border-gray-300 pr-10 focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Enter your password"
               />
               <button
@@ -251,9 +261,24 @@ const Register = () => {
               Must include uppercase, lowercase, special character, and be at
               least 6 characters
             </p>
+            {fieldErrors.password && (
+              <p
+                id="password-error"
+                role="alert"
+                className="text-sm text-red-600 mt-1"
+              >
+                {fieldErrors.password}
+              </p>
+            )}
           </div>
-          <button className="w-full py-2 bg- rounded  transition duration-200 mb-4 bg-gray-100 text-black cursor-pointer shadow-sm">
-            Register
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full py-2 bg- rounded  transition duration-200 mb-4 bg-gray-100 text-black cursor-pointer shadow-sm ${
+              isSubmitting ? "opacity-70 loading" : ""
+            }`}
+          >
+            {isSubmitting ? "Registering..." : "Register"}
           </button>
         </form>
 
@@ -293,7 +318,7 @@ const Register = () => {
         </button>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600text-sm">
+          <p className="text-gray-700 text-sm">
             Already have an account?{" "}
             <NavLink
               to="/login"

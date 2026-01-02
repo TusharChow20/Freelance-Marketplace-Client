@@ -16,6 +16,9 @@ const AllJobs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12; // items per page
 
+  // accessibility helpers
+  const [controlsOpen, setControlsOpen] = useState(false);
+
   useEffect(() => {
     setJobLoading(true);
     axiosSecure
@@ -90,7 +93,7 @@ const AllJobs = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 relative z-50">
+      <div className="mb-6 relative z-50 overflow-visible">
         <h1 className="text-4xl font-bold mb-4">All Jobs</h1>
 
         {/* Controls: search, category, location, sort */}
@@ -101,10 +104,11 @@ const AllJobs = () => {
             </label>
             <input
               id="jobSearch"
+              aria-label="Search jobs"
               placeholder="Search by title, company, location, or keywords"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="input input-bordered w-full bg-base-100 text-base-content"
+              className="input input-bordered w-full bg-white text-black dark:bg-base-100 dark:text-base-content focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -116,11 +120,24 @@ const AllJobs = () => {
               id="categoryFilter"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="select select-bordered w-full bg-base-100 text-base-content"
+              onFocus={() => setControlsOpen(true)}
+              onBlur={() => setControlsOpen(false)}
+              onMouseDown={() => setControlsOpen(true)}
+              onTouchStart={() => setControlsOpen(true)}
+              className="relative z-50 select select-bordered w-full bg-white text-black dark:bg-base-100 dark:text-base-content"
             >
-              <option value="">All categories</option>
+              <option
+                value=""
+                className="bg-white text-black dark:bg-gray-800 dark:text-white"
+              >
+                All categories
+              </option>
               {categories.map((c) => (
-                <option key={c} value={c}>
+                <option
+                  key={c}
+                  value={c}
+                  className="bg-white text-black dark:bg-gray-800 dark:text-white"
+                >
                   {c}
                 </option>
               ))}
@@ -133,13 +150,27 @@ const AllJobs = () => {
             </label>
             <select
               id="locationFilter"
+              aria-label="Filter by location"
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
-              className="select select-bordered w-full bg-base-100 text-base-content"
+              onFocus={() => setControlsOpen(true)}
+              onBlur={() => setControlsOpen(false)}
+              onMouseDown={() => setControlsOpen(true)}
+              onTouchStart={() => setControlsOpen(true)}
+              className="relative z-50 select select-bordered w-full bg-white text-black dark:bg-base-100 dark:text-base-content focus:outline-none focus:ring-2 focus:ring-primary"
             >
-              <option value="">All locations</option>
+              <option
+                value=""
+                className="bg-white text-black dark:bg-gray-800 dark:text-white"
+              >
+                All locations
+              </option>
               {locations.map((l) => (
-                <option key={l} value={l}>
+                <option
+                  key={l}
+                  value={l}
+                  className="bg-white text-black dark:bg-gray-800 dark:text-white"
+                >
                   {l}
                 </option>
               ))}
@@ -154,16 +185,30 @@ const AllJobs = () => {
               id="sortOrder"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              className="select select-bordered w-full bg-base-100 text-base-content"
+              onFocus={() => setControlsOpen(true)}
+              onBlur={() => setControlsOpen(false)}
+              onMouseDown={() => setControlsOpen(true)}
+              onTouchStart={() => setControlsOpen(true)}
+              className="relative z-50 select select-bordered w-full bg-white text-black dark:bg-base-100 dark:text-base-content"
             >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
+              <option
+                value="newest"
+                className="bg-white text-black dark:bg-gray-800 dark:text-white"
+              >
+                Newest First
+              </option>
+              <option
+                value="oldest"
+                className="bg-white text-black dark:bg-gray-800 dark:text-white"
+              >
+                Oldest First
+              </option>
             </select>
           </div>
         </div>
 
         <div className="mt-3 flex items-center justify-between">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-700">
             Showing <strong>{sortedJobs.length}</strong> results
           </div>
           <div>
@@ -183,7 +228,11 @@ const AllJobs = () => {
       </div>
 
       {/* Job grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10 ${
+          controlsOpen ? "filter brightness-75" : ""
+        }`}
+      >
         {paginated.map((job) => (
           <Jobs key={job._id} job={job} />
         ))}

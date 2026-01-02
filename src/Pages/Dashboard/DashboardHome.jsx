@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import JobsChart from "./JobsChart";
+import JobsTable from "./JobsTable";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import Loading from "../../Loading/Loading";
 
@@ -38,13 +40,16 @@ const DashboardHome = () => {
         <StatCard title="Your Active Listings" value={stats.jobs} />
       </div>
 
-      <section className="bg-base-100 rounded-lg p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-3">Recent Activity</h2>
-        <p className="text-gray-500">
-          This section will include a small chart and recent actions.
-        </p>
-        {/* Add chart component here later */}
-      </section>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <section className="col-span-1 lg:col-span-1 bg-base-100 rounded-lg p-6 shadow-sm">
+          <h2 className="text-xl font-semibold mb-3">Jobs by Category</h2>
+          <JobsChart />
+        </section>
+        <section className="col-span-1 lg:col-span-2 bg-base-100 rounded-lg p-6 shadow-sm">
+          <h2 className="text-xl font-semibold mb-3">Jobs (Server-backed)</h2>
+          <JobsTable />
+        </section>
+      </div>
     </div>
   );
 };
