@@ -109,12 +109,10 @@ const Login = () => {
   };
 
   const handleDemo = async () => {
-    // Demo credentials (change if you have a seeded demo user)
     const demoEmail = "demo@taskrio.com";
-    const demoPass = "Demo123!";
+    const demoPass = "Demo@123!";
     setEmail(demoEmail);
     setPassword(demoPass);
-    // auto submit
     await submitForm();
   };
 

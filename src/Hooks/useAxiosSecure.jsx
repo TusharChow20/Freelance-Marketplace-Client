@@ -7,6 +7,7 @@ import { getAuth } from "firebase/auth";
 
 const instance = axios.create({
   baseURL: "https://freelance-marketplace-server-azure.vercel.app",
+  // baseURL: "http://localhost:3000",
 });
 
 const useAxiosSecure = () => {

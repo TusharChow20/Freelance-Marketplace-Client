@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import JobsChart from "./JobsChart";
-import JobsTable from "./JobsTable";
+import UserJobsChart from "./UserJobsChart";
+import { AuthContext } from "../../Provider/AuthContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import Loading from "../../Loading/Loading";
 
@@ -13,21 +14,39 @@ const StatCard = ({ title, value }) => (
 
 const DashboardHome = () => {
   const axios = useAxiosSecure();
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ jobs: 0, accepted: 0 });
 
   useEffect(() => {
-    // Fetch basic counts - using existing endpoints
-    Promise.all([axios.get("/jobs"), axios.get("/acceptedJob")])
-      .then(([jobsRes, acceptedRes]) => {
+    const load = async () => {
+      try {
+        const jobsRes = await axios.get("/jobs");
+        let acceptedCount = 0;
+        if (user?.email) {
+          const accRes = await axios.get(
+            `/acceptedJob?email=${encodeURIComponent(user.email)}`
+          );
+          acceptedCount = Array.isArray(accRes.data)
+            ? accRes.data.length
+            : accRes.data?.length ?? 0;
+        }
+
         setStats({
-          jobs: jobsRes.data.length,
-          accepted: acceptedRes.data.length,
+          jobs: Array.isArray(jobsRes.data)
+            ? jobsRes.data.length
+            : jobsRes.data?.total ?? 0,
+          accepted: acceptedCount,
         });
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [axios]);
+      } catch {
+        // ignore for now; stats will stay at defaults
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, [axios, user]);
 
   if (loading) return <Loading />;
 
@@ -46,8 +65,10 @@ const DashboardHome = () => {
           <JobsChart />
         </section>
         <section className="col-span-1 lg:col-span-2 bg-base-100 rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-3">Jobs (Server-backed)</h2>
-          <JobsTable />
+          <h2 className="text-xl font-semibold mb-3">
+            Your Posted vs Accepted
+          </h2>
+          <UserJobsChart />
         </section>
       </div>
     </div>
